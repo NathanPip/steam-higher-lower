@@ -3,6 +3,8 @@ import playwright from "playwright";
 export type GameObj = {
     title: string;
     appId: string;
+    hasPlayed?: boolean;
+    playerCount?: number;
 }
 
 export const scrapeTopGames = async () => {
@@ -34,8 +36,7 @@ export const scrapeTopGames = async () => {
     return games;
 }
 
-export const getTopGames = async () => {
-    const games = await fetch('/api/topSteamGames');
-    console.log(games);
-    return games;
+export const getRandomGame = (games: Array<GameObj>) => {
+    const rand = Math.floor(Math.random()*games.length);
+    return games[rand];
 }
