@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 export default function Home() {
+
   return (
     <div className={`container mx-auto h-screen`}>
       <Head>
@@ -25,7 +26,7 @@ export default function Home() {
           Higher Lower <span className="block text-center my-2">Game</span>
         </h1>
         <Link className={`bg-cyan-800 my-32 py-2 text-3xl text-white rounded-lg w-40 text-center`} href="/classic">Play</Link>
-      </div>
+      </div> 
     </div>
   );
 }

@@ -12,6 +12,7 @@ type GameProps = {
   outcome?: any
 };
 
+
 export default function Game(
   { game, isGuess, higher }: GameProps = {
     game: { title: "unavailable", playerCount: 0 },
