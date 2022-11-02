@@ -2,8 +2,9 @@ import { PrismaClient } from "@prisma/client";
 import { GetServerSideProps } from "next";
 import { useEffect } from "react";
 import Game from "../components/game/game";
+import { GameObj } from "../lib/steamUtils";
 
-export default function Classic({games}) {
+export default function Classic({games}: {games: Array<GameObj>}) {
 
   useEffect(() =>{
     console.log(games);
