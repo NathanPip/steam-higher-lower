@@ -23,6 +23,7 @@ export default function Classic({ games }: { games: Array<GameObj> }) {
       game = games[newGameIndex];
     }
     games[newGameIndex].hasPlayed = true;
+    setCount1(count2);
     setGame2(game)
   };
 
