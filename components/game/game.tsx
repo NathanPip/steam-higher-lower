@@ -5,17 +5,19 @@ import styles from "./game.module.css";
 type GameProps = {
   game: (GameObj | undefined);
   isGuess: boolean;
-  setCount?: any;
+  setCount: any;
+  setHigher?: any;
 };
 
-export default function Game({ game, isGuess }: GameProps) {
+export default function Game({ game, isGuess, setCount, setHigher }: GameProps) {
   let [loading, setLoading] = useState(true);
   let [error, setError] = useState();
-  let [playerCount, setPlayerCount] = useState();
+  let [playerCount, setPlayerCount] = useState<number>();
 
   useEffect(() => {
     if (!game) return;
     if(game.playerCount) {
+      setPlayerCount(game.playerCount);
       setLoading(false);
       return;
     }
@@ -32,15 +34,17 @@ export default function Game({ game, isGuess }: GameProps) {
     })
     .then(data => {
       setPlayerCount(data.playerCount);
+      setCount(data.playerCount);
       setLoading(false);
     }).catch(err => {
       setError(err);
+      setLoading(false);
     })
-  }, [game]);
+  }, [game, setCount]);
 
   return (
     <>
-    {loading ? 
+    {loading || !game ? 
       <div>loading</div> 
       :
       <>
@@ -49,11 +53,11 @@ export default function Game({ game, isGuess }: GameProps) {
       </div>
       {isGuess ? (
         <div className="guess-group flex flex-col justify-around items-center mt-3 text-2xl h-1/4">
-          <button className={`higher ${styles.btn} mb-3 bg-green-500`}>
+          <button onClick={() => setHigher(true)}className={`higher ${styles.btn} mb-3 bg-green-500`}>
             higher
           </button>
           Or
-          <button className={`lower ${styles.btn} bg-red-500`}>lower</button>
+          <button onClick={() => setHigher(false)}className={`lower ${styles.btn} bg-red-500`}>lower</button>
         </div>
       ) : <p className="game-price text-2xl mt-5 text-center">{playerCount}</p>}
       </>
