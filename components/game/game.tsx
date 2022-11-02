@@ -5,7 +5,7 @@ import styles from "./game.module.css";
 type GameProps = {
   game: {
     title: string;
-    price: number;
+    playerCount: number;
   };
   isGuess: boolean;
   higher?: boolean;
@@ -14,16 +14,12 @@ type GameProps = {
 
 export default function Game(
   { game, isGuess, higher }: GameProps = {
-    game: { title: "unavailable", price: 0 },
+    game: { title: "unavailable", playerCount: 0 },
     isGuess: false,
   }
 ) {
 
-    let [price, setPrice] = useState("");
-
-    useEffect(() => {
-        setPrice(game.price.toString())
-    }, [game.price])
+    let [playerCount, setPlayerCount] = useState(game.playerCount);
 
     const gameWinHandler = (isHigherBtn: boolean) => {
         if(higher && isHigherBtn) {
@@ -35,7 +31,7 @@ export default function Game(
     <>
       <div className="text-center py-4">
         <h2 className="game-title text-5xl">{game.title}</h2>
-        <p className="game-price text-2xl mt-5">{price}</p>
+        <p className="game-price text-2xl mt-5">{playerCount}</p>
       </div>
       {isGuess && (
         <div className="guess-group flex flex-col justify-around items-center mt-3 text-2xl h-1/4">
