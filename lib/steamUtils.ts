@@ -1,5 +1,9 @@
 import playwright from "playwright";
-import { GameObj, SteamGames } from "../Data/SteamGameData";
+
+export type GameObj = {
+    title: string;
+    appId: string;
+}
 
 export const getTopGames = async () => {
     const browser = await playwright.chromium.launch();
@@ -9,7 +13,7 @@ export const getTopGames = async () => {
 
     for(let i=0; i<5; i++) {
         await page.mouse.wheel(0, 1000);
-        await page.waitForTimeout(200);
+        await page.waitForTimeout(500);
     }
 
     await page.waitForSelector('#search_resultsRows');
@@ -27,5 +31,5 @@ export const getTopGames = async () => {
         return games;
     })
     await browser.close();
-    return true;
+    return games;
 }
