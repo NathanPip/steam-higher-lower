@@ -12,27 +12,30 @@ export default function Classic({ games }: { games: Array<GameObj> }) {
   const [higher, setHigher] = useState<boolean>();
   const [wins, setWins] = useState(0);
 
-  const handleWin = () => {
-    if(!game1 || !game2) return;
-    setWins(prev => prev+1);
-    setGame1({...game2, playerCount: count2});
+  const handleWin = async () => {
+    if (!game1 || !game2) return;
+    setWins((prev) => prev + 1);
+    setGame1({ ...game2, playerCount: count2 });
+    handleRestart();
+  };
+
+  const handleRestart = () => {
     let newGameIndex = getRandomIndex();
     let game = games[newGameIndex];
-    while(games[newGameIndex].hasPlayed || game.appId === game2?.appId) {
+    while (games[newGameIndex].hasPlayed || game.appId === game2?.appId) {
       newGameIndex = getRandomIndex();
       game = games[newGameIndex];
     }
     games[newGameIndex].hasPlayed = true;
     setCount1(count2);
-    setGame2(game)
+    setGame2(game);
   };
 
-  const getRandomIndex = () => {
-    return Math.floor(Math.random() * games.length);
-  }
-
-  useEffect(() => {
+  const startGame = () => {
     if (!games) return;
+    for(let i=0; i< games.length; i++) {
+      games[i].hasPlayed = false;
+    }
     let rand1 = Math.floor(Math.random() * games.length);
     let game1 = games[rand1];
     let rand2 = 0;
@@ -46,6 +49,20 @@ export default function Classic({ games }: { games: Array<GameObj> }) {
     games[rand2].hasPlayed = true;
     setGame1(game1);
     setGame2(game2);
+  };
+
+  const handleLose = () => {
+    console.log("lost");
+    setWins(0);
+    startGame();
+  };
+
+  const getRandomIndex = () => {
+    return Math.floor(Math.random() * games.length);
+  };
+
+  useEffect(() => {
+    startGame();
   }, []);
 
   useEffect(() => {
@@ -63,15 +80,17 @@ export default function Classic({ games }: { games: Array<GameObj> }) {
       handleWin();
       setHigher(undefined);
     } else {
+      handleLose();
       setHigher(undefined);
     }
   }, [higher]);
 
   return (
-    <div className="h-screen flex flex-col">
-      <div className="flex-2 justify-center flex flex-col pt-24">
+    <div className="h-screen flex flex-col justify-around">
+      <div className="flex-1 justify-center flex flex-col">
         <Game game={game1} isGuess={false} setCount={setCount1}></Game>
       </div>
+      <div className="score-container flex-3 text-center">{wins}</div>
       <div className="flex-1 justify-center flex flex-col">
         <Game
           game={game2}

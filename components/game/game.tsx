@@ -13,9 +13,17 @@ export default function Game({ game, isGuess, setCount, setHigher }: GameProps) 
   let [loading, setLoading] = useState(true);
   let [error, setError] = useState();
   let [playerCount, setPlayerCount] = useState<number>();
+  let [hasClicked, setHasClicked] = useState(false);
+
+  const clickHandler = (higher: boolean) => {
+    setHasClicked(true);
+    console.log(isGuess)
+    setHigher(higher);
+  }
 
   useEffect(() => {
     if (!game) return;
+    setHasClicked(false);
     if(game.playerCount) {
       setPlayerCount(game.playerCount);
       setLoading(false);
@@ -51,13 +59,13 @@ export default function Game({ game, isGuess, setCount, setHigher }: GameProps) 
       <div className="text-center py-4">
         <h2 className="game-title text-5xl">{game.title}</h2>
       </div>
-      {isGuess ? (
-        <div className="guess-group flex flex-col justify-around items-center mt-3 text-2xl h-1/4">
-          <button onClick={() => setHigher(true)}className={`higher ${styles.btn} mb-3 bg-green-500`}>
+      {isGuess && !hasClicked ? (
+        <div className="guess-group flex justify-center gap-6 items-center mt-3 text-2xl h-1/4">
+          <button onClick={() => clickHandler(false)}className={`lower ${styles.btn} bg-red-500`}>lower</button>
+          Or
+          <button onClick={() => clickHandler(true)}className={`higher ${styles.btn} mb-3 bg-green-500`}>
             higher
           </button>
-          Or
-          <button onClick={() => setHigher(false)}className={`lower ${styles.btn} bg-red-500`}>lower</button>
         </div>
       ) : <p className="game-price text-2xl mt-5 text-center">{playerCount}</p>}
       </>
