@@ -26,14 +26,15 @@ export const scrapeTopGames = async () => {
             let game = {title: "NA", appId: "NA"};
             const gameId = list.children[i].getAttribute("data-ds-appid");
             const gameTitle = list.children[i].querySelector(".title")?.innerHTML;
-            const releaseDate = list.children[i].querySelector(".search-released")?.innerHTML.trim();
+            const releaseDate = list.children[i].querySelector(".search_released")?.innerHTML.trim();
             const now = new Date(); 
-            let date: Date;
-            if(releaseDate)
+            let date: (Date | undefined) = undefined;
+            if(releaseDate){
                 date = new Date(releaseDate);
-            if(date !== undefined && now.getTime() < date.getTime()) {
-                continue;
-            }
+                if(now.getTime() < date.getTime()) {
+                    continue;
+                }
+            } 
             if(gameId) game.appId = gameId;
             if(gameTitle) game.title = gameTitle;
             games.push(game)
