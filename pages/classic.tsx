@@ -1,6 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 import { GetServerSideProps } from "next";
 import { useEffect, useState } from "react";
+import EndGame from "../components/EndGame/EndGame";
 import Game from "../components/game/game";
 import { GameObj } from "../lib/steamUtils";
 
@@ -11,15 +12,27 @@ export default function Classic({ games }: { games: Array<GameObj> }) {
   const [count2, setCount2] = useState<number>();
   const [higher, setHigher] = useState<boolean>();
   const [wins, setWins] = useState(0);
+  const [displayEndGame, setDisplayEndGame] = useState(false)
+
+  const getRandomIndex = () => {
+    return Math.floor(Math.random() * games.length);
+  };
 
   const handleWin = async () => {
     if (!game1 || !game2) return;
     setWins((prev) => prev + 1);
     setGame1({ ...game2, playerCount: count2 });
-    handleRestart();
+    handleNextGame();
   };
 
-  const handleRestart = () => {
+  const handleLose = () => {
+    console.log("lost");
+    setWins(0);
+    setDisplayEndGame(false);
+    startGame();
+  };
+
+  const handleNextGame = () => {
     let newGameIndex = getRandomIndex();
     let game = games[newGameIndex];
     while (games[newGameIndex].hasPlayed || game.appId === game2?.appId) {
@@ -51,16 +64,6 @@ export default function Classic({ games }: { games: Array<GameObj> }) {
     setGame2(game2);
   };
 
-  const handleLose = () => {
-    console.log("lost");
-    setWins(0);
-    startGame();
-  };
-
-  const getRandomIndex = () => {
-    return Math.floor(Math.random() * games.length);
-  };
-
   useEffect(() => {
     startGame();
   }, []);
@@ -80,7 +83,7 @@ export default function Classic({ games }: { games: Array<GameObj> }) {
       handleWin();
       setHigher(undefined);
     } else {
-      handleLose();
+      setDisplayEndGame(true);
       setHigher(undefined);
     }
   }, [higher]);
@@ -99,6 +102,9 @@ export default function Classic({ games }: { games: Array<GameObj> }) {
           setHigher={setHigher}
         ></Game>
       </div>
+      {displayEndGame &&
+        <EndGame onClick={handleLose} score={wins}></EndGame>
+      }
     </div>
   );
 }
