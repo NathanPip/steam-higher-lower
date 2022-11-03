@@ -3,13 +3,15 @@ import playwright from "playwright";
 export type GameObj = {
     title: string;
     appId: string;
+    hasPlayed?: boolean;
+    playerCount?: number;
 }
 
 export const scrapeTopGames = async () => {
     const browser = await playwright.chromium.launch();
 
     const page = await browser.newPage();
-    await page.goto("https://store.steampowered.com/search/?filter=topsellers&os=win");
+    await page.goto("https://store.steampowered.com/search/?category1=998&os=win&filter=topsellers");
 
     for(let i=0; i<10; i++) {
         await page.mouse.wheel(0, 2000);
@@ -24,6 +26,15 @@ export const scrapeTopGames = async () => {
             let game = {title: "NA", appId: "NA"};
             const gameId = list.children[i].getAttribute("data-ds-appid");
             const gameTitle = list.children[i].querySelector(".title")?.innerHTML;
+            const releaseDate = list.children[i].querySelector(".search_released")?.innerHTML.trim();
+            const now = new Date(); 
+            let date: (Date | undefined) = undefined;
+            if(releaseDate){
+                date = new Date(releaseDate);
+                if(now.getTime() < date.getTime()) {
+                    continue;
+                }
+            } 
             if(gameId) game.appId = gameId;
             if(gameTitle) game.title = gameTitle;
             games.push(game)
@@ -34,8 +45,7 @@ export const scrapeTopGames = async () => {
     return games;
 }
 
-export const getTopGames = async () => {
-    const games = await fetch('/api/topSteamGames');
-    console.log(games);
-    return games;
+export const getRandomGame = (games: Array<GameObj>) => {
+    const rand = Math.floor(Math.random()*games.length);
+    return games[rand];
 }
