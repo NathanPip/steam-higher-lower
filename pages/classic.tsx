@@ -2,7 +2,7 @@ import { PrismaClient } from "@prisma/client";
 import { GetServerSideProps } from "next";
 import { useEffect, useState } from "react";
 import EndGame from "../components/EndGame/EndGame";
-import Game from "../components/game/game";
+import Game from "../components/Game/game";
 import { GameObj } from "../lib/steamUtils";
 
 export default function Classic({ games }: { games: Array<GameObj> }) {
@@ -12,7 +12,7 @@ export default function Classic({ games }: { games: Array<GameObj> }) {
   const [count2, setCount2] = useState<number>();
   const [higher, setHigher] = useState<boolean>();
   const [wins, setWins] = useState(0);
-  const [displayEndGame, setDisplayEndGame] = useState(false)
+  const [displayEndGame, setDisplayEndGame] = useState(false);
 
   const getRandomIndex = () => {
     return Math.floor(Math.random() * games.length);
@@ -46,7 +46,7 @@ export default function Classic({ games }: { games: Array<GameObj> }) {
 
   const startGame = () => {
     if (!games) return;
-    for(let i=0; i< games.length; i++) {
+    for (let i = 0; i < games.length; i++) {
       games[i].hasPlayed = false;
     }
     let rand1 = Math.floor(Math.random() * games.length);
@@ -90,21 +90,15 @@ export default function Classic({ games }: { games: Array<GameObj> }) {
 
   return (
     <div className="h-screen flex flex-col justify-around">
-      <div className="flex-1 justify-center flex flex-col">
-        <Game game={game1} isGuess={false} setCount={setCount1}></Game>
-      </div>
+      <Game game={game1} isGuess={false} setCount={setCount1}></Game>
       <div className="score-container flex-3 text-center">{wins}</div>
-      <div className="flex-1 justify-center flex flex-col">
-        <Game
-          game={game2}
-          isGuess={true}
-          setCount={setCount2}
-          setHigher={setHigher}
-        ></Game>
-      </div>
-      {displayEndGame &&
-        <EndGame onClick={handleLose} score={wins}></EndGame>
-      }
+      <Game
+        game={game2}
+        isGuess={true}
+        setCount={setCount2}
+        setHigher={setHigher}
+      ></Game>
+      {displayEndGame && <EndGame onClick={handleLose} score={wins}></EndGame>}
     </div>
   );
 }
