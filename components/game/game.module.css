@@ -1,3 +1,9 @@
 .btn {
     @apply py-2 px-4 text-4xl my-2 w-36 rounded-lg;
 }
+.steam__img {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -80%)
+}

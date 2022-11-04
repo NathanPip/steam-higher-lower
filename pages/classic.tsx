@@ -3,6 +3,7 @@ import { GetServerSideProps } from "next";
 import { useEffect, useState } from "react";
 import EndGame from "../components/EndGame/EndGame";
 import Game from "../components/Game/game";
+import { delay } from "../lib/helpers";
 import { GameObj } from "../lib/steamUtils";
 
 export default function Classic({ games }: { games: Array<GameObj> }) {
@@ -21,6 +22,7 @@ export default function Classic({ games }: { games: Array<GameObj> }) {
   const handleWin = async () => {
     if (!game1 || !game2) return;
     setWins((prev) => prev + 1);
+    await delay(2000);
     setGame1({ ...game2, playerCount: count2 });
     handleNextGame();
   };

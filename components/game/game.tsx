@@ -1,7 +1,6 @@
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { GameObj } from "../../lib/steamUtils";
-import { SteamImage } from "../SteamImage/SteamImage";
 import styles from "./game.module.css";
 
 type GameProps = {
@@ -10,6 +9,10 @@ type GameProps = {
   setCount: any;
   setHigher?: any;
 };
+
+function steamImageLoader({ src }: {src: string}) {
+  return `https://cdn.akamai.steamstatic.com/steam/apps/${src}/header.jpg`
+}
 
 export default function Game({
   game,
@@ -68,7 +71,18 @@ export default function Game({
               player count is
             </p>
           </div>
-          <SteamImage appId={game.appId} title={game.title}></SteamImage>
+
+          <Image
+            className={`${styles.steam__img} opacity-50
+            blur-sm scale-90 z-0`}
+            loader={steamImageLoader}
+            src={game.appId}
+            alt={`${game.title} game`}
+            width="500"
+            height="300"
+        >
+        </Image>
+
           {isGuess && !hasClicked ? (
             <div className="guess-group flex justify-center gap-6 items-center mt-3 text-2xl h-1/4">
               <button
