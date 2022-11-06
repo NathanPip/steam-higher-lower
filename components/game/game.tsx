@@ -81,7 +81,7 @@ export default function Game({
         {game.title}
       </h2>
 
-      <div className={`${styles.image__container} absolute top-1/2 left-1/2 h-screen w-full -translate-x-1/2 -translate-y-1/2 flex items-center justify-center`}>
+      <div className={`absolute top-1/2 left-1/2 h-screen w-full -translate-x-1/2 -translate-y-1/2 flex items-center justify-center`}>
           <Image
             className={`${styles.steam__img} opacity-50 blur-sm scale-90 z-0 relative  brightness-50`}
             loader={steamImageLoader}
