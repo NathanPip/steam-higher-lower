@@ -71,11 +71,6 @@ export default function Classic({ games }: { games: Array<GameObj> }) {
   }, []);
 
   useEffect(() => {
-    console.log(count1);
-    console.log(count2);
-  }, [count1, count2]);
-
-  useEffect(() => {
     if (higher === undefined || count1 === undefined || count2 === undefined)
       return;
     if (
@@ -91,7 +86,7 @@ export default function Classic({ games }: { games: Array<GameObj> }) {
   }, [higher]);
 
   return (
-    <div className="h-screen flex flex-col justify-around">
+    <div className="h-screen overflow-hidden flex justify-between items-center ">
       <Game game={game1} isGuess={false} setCount={setCount1}></Game>
       <div className="score-container flex-3 text-center">{wins}</div>
       <Game

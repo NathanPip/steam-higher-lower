@@ -1,0 +1,26 @@
+.steam__img {
+    transition: scale .5s ease-in-out, filter .5s ease-in-out;
+}
+
+.game__title, .game__price {
+    transition: transform .5s ease-in-out;
+}
+
+.game:hover {
+    .steam__img {
+        @apply blur-0; 
+        scale: 1.03;
+    }
+    .game__title, .game__price {
+        transform: scale(1.05);
+    }
+    // .game__title {
+    //     @apply bg-zinc-800 bg-opacity-70; 
+    // }
+    // .game__title {
+    //     @apply bg-zinc-800 bg-opacity-70; 
+    // }
+    // .game__price {
+    //     @apply bg-zinc-800 bg-opacity-70; 
+    // }
+}
