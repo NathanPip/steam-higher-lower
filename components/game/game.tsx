@@ -81,9 +81,9 @@ export default function Game({
         {game.title}
       </h2>
 
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-screen w-full flex items-center justify-center">
+      <div className={`${styles.image__container} absolute top-1/2 left-1/2 h-screen w-full -translate-x-1/2 -translate-y-1/2 flex items-center justify-center`}>
           <Image
-            className={`${styles.steam__img} opacity-50 blur-sm scale-90 z-0 relative`}
+            className={`${styles.steam__img} opacity-50 blur-sm scale-90 z-0 relative  brightness-50`}
             loader={steamImageLoader}
             src={game.appId}
             alt={`${game.title} game`}
@@ -91,7 +91,6 @@ export default function Game({
             height="500"
           >
           </Image>
-          <div className="absolute h-full w-full bg-zinc-800 bg-opacity-50"></div>
       </div>
 
       <div className="z-10">

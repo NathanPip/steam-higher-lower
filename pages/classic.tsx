@@ -88,7 +88,11 @@ export default function Classic({ games }: { games: Array<GameObj> }) {
   return (
     <div className="h-screen overflow-hidden flex justify-between items-center ">
       <Game game={game1} isGuess={false} setCount={setCount1}></Game>
-      <div className="score-container flex-3 text-center">{wins}</div>
+      <div className="flex-3 h-full bg-black w-3">
+        <div className="rounded-full h-12 w-12 bg-black flex items-center justify-center text-xl absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10">
+          {wins}
+        </div>
+      </div>
       <Game
         game={game2}
         isGuess={true}
