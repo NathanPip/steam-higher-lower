@@ -1,0 +1,22 @@
+.steam__img {
+  transition: scale 0.5s ease-in-out, filter 0.5s ease-in-out;
+}
+
+.game__title,
+.game__price {
+  transition: transform 0.5s ease-in-out;
+}
+
+.game {
+    min-width: 50%;
+  &:hover {
+    .steam__img {
+      @apply blur-0;
+      scale: 1.03;
+    }
+    .game__title,
+    .game__price {
+      transform: scale(1.05);
+    }
+  }
+}
