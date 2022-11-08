@@ -14,7 +14,7 @@ function steamImageLoader({ src }: { src: string }) {
   return `https://cdn.akamai.steamstatic.com/steam/apps/${src}/header.jpg`;
 }
 
-const btnStyles = "py-3 px-5 text-5xl rounded-lg"
+const btnStyles = "py-3 px-5 text-5xl rounded-lg bg-gradient-to-br"
 
 export default function Game({
   game,
@@ -73,7 +73,6 @@ export default function Game({
         There was an error loading the game
       </div>
     );
-
   return (
     <div
       className={`${styles.game} w-1/2 flex-1 flex flex-col justify-between items-center h-1/3 relative`}
@@ -103,14 +102,14 @@ export default function Game({
           <div className="guess-group flex justify-center h-32 gap-6 items-center mt-auto text-xl">
             <button
               onClick={() => clickHandler(true)}
-              className={`higher ${btnStyles} bg-green-500`}
+              className={`higher ${btnStyles} from-green-300 to-green-600`}
             >
               higher
             </button>
             Or
             <button
               onClick={() => clickHandler(false)}
-              className={`lower ${btnStyles} bg-red-500`}
+              className={`lower ${btnStyles} from-red-300 to-red-600`}
             >
               lower
             </button>

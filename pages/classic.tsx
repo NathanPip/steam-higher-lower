@@ -29,16 +29,10 @@ export default function Classic({ games }: { games: Array<GameObj> }) {
     setWins((prev) => prev + 1);
     setJustWon(true);
     await delay(2000);
-    setJustWon(false);
     setGame1({ ...game2, playerCount: count2 });
     setGame2(game3)
     setGame3(playables[currWins+3])
-    await delay(1000)
-    console.log(game1)
-    console.log(game2)
-    console.log(game3)
-    console.log(count1)
-    console.log(count2)
+    setJustWon(false);
   };
 
   const handleLose = () => {
