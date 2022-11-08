@@ -9,6 +9,8 @@ import { GameObj } from "../lib/steamUtils";
 export default function Classic({ games }: { games: Array<GameObj> }) {
   const [game1, setGame1] = useState<GameObj>();
   const [game2, setGame2] = useState<GameObj>();
+  const [game3, setGame3] = useState<GameObj>();
+  const [playables, setPlayables] = useState<Array<GameObj>>();
   const [count1, setCount1] = useState<number>();
   const [count2, setCount2] = useState<number>();
   const [higher, setHigher] = useState<boolean>();
@@ -22,13 +24,21 @@ export default function Classic({ games }: { games: Array<GameObj> }) {
   };
 
   const handleWin = async () => {
-    if (!game1 || !game2) return;
+    if (!game1 || !game2 || !playables) return;
+    const currWins = wins; 
     setWins((prev) => prev + 1);
     setJustWon(true);
     await delay(2000);
     setJustWon(false);
     setGame1({ ...game2, playerCount: count2 });
-    handleNextGame();
+    setGame2(game3)
+    setGame3(playables[currWins+3])
+    await delay(1000)
+    console.log(game1)
+    console.log(game2)
+    console.log(game3)
+    console.log(count1)
+    console.log(count2)
   };
 
   const handleLose = () => {
@@ -38,37 +48,25 @@ export default function Classic({ games }: { games: Array<GameObj> }) {
     startGame();
   };
 
-  const handleNextGame = () => {
-    let newGameIndex = getRandomIndex();
-    let game = games[newGameIndex];
-    while (games[newGameIndex].hasPlayed || game.appId === game2?.appId) {
-      newGameIndex = getRandomIndex();
-      game = games[newGameIndex];
-    }
-    games[newGameIndex].hasPlayed = true;
-    setCount1(count2);
-    setGame2(game);
-  };
-
   const startGame = () => {
     if (!games) return;
-    for (let i = 0; i < games.length; i++) {
-      games[i].hasPlayed = false;
-    }
-    let rand1 = Math.floor(Math.random() * games.length);
-    let game1 = games[rand1];
-    let rand2 = 0;
-    let game2;
-    while (game2 === undefined || game1.appId === game2.appId) {
-      rand2 = Math.floor(Math.random() * games.length);
-      game2 = games[rand2];
-    }
-    console.log(games[rand1]);
-    games[rand1].hasPlayed = true;
-    games[rand2].hasPlayed = true;
-    setGame1(game1);
-    setGame2(game2);
+    const newGames = getShuffledGames();
+    setGame1(newGames[0]);
+    setGame2(newGames[1]);
+    setGame3(newGames[2]);
+    setPlayables(newGames);
   };
+
+  const getShuffledGames = () => {
+    let tempGames = [...games];
+    let newGames = [];
+    while(tempGames.length) {
+      let rand = Math.floor(Math.random() * tempGames.length);
+      newGames.push(tempGames[rand]);
+      tempGames.splice(rand,1)
+    }
+    return newGames;
+  }
 
   useEffect(() => {
     startGame();
@@ -98,11 +96,11 @@ export default function Classic({ games }: { games: Array<GameObj> }) {
         } h-screen flex justify-between items-center `}
       >
         <Game game={game1} isGuess={false} setCount={setCount1}></Game>
-        <div className="flex-3 h-full bg-black w-3">
+        {/* <div className="flex-3 h-full bg-black w-3">
           <div className="rounded-full h-12 w-12 bg-black flex items-center justify-center text-xl absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10">
             {wins}
           </div>
-        </div>
+        </div> */}
         <Game
           game={game2}
           isGuess={true}
@@ -110,9 +108,8 @@ export default function Classic({ games }: { games: Array<GameObj> }) {
           setHigher={setHigher}
         ></Game>
         <Game
-          game={game2}
+          game={game3}
           isGuess={true}
-          setCount={setCount2}
           setHigher={setHigher}
         ></Game>
         {displayEndGame && (
