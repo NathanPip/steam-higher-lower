@@ -7,9 +7,8 @@ body {
   margin: 0;
   font-size: 22px;
   color: white;
-  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
-    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
-  background-image: linear-gradient(to bottom right, rgb(34, 67, 84), rgb(0, 0, 0) 70%)
+  background-color: rgb(6, 17, 22);
+  /* background-image: linear-gradient(to bottom right, rgb(34, 67, 84), rgb(0, 0, 0) 70%) */
 }
 
 #__next {

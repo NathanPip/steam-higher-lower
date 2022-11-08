@@ -1,6 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 import { GetServerSideProps } from "next";
 import { useEffect, useRef, useState } from "react";
+import BaseLayout from "../components/BaseLayout/BaseLayout";
 import EndGame from "../components/EndGame/EndGame";
 import Game from "../components/Game/game";
 import { delay } from "../lib/helpers";
@@ -25,13 +26,13 @@ export default function Classic({ games }: { games: Array<GameObj> }) {
 
   const handleWin = async () => {
     if (!game1 || !game2 || !playables) return;
-    const currWins = wins; 
+    const currWins = wins;
     setWins((prev) => prev + 1);
     setJustWon(true);
     await delay(2000);
     setGame1({ ...game2, playerCount: count2 });
-    setGame2(game3)
-    setGame3(playables[currWins+3])
+    setGame2(game3);
+    setGame3(playables[currWins + 3]);
     setJustWon(false);
   };
 
@@ -54,13 +55,13 @@ export default function Classic({ games }: { games: Array<GameObj> }) {
   const getShuffledGames = () => {
     let tempGames = [...games];
     let newGames = [];
-    while(tempGames.length) {
+    while (tempGames.length) {
       let rand = Math.floor(Math.random() * tempGames.length);
       newGames.push(tempGames[rand]);
-      tempGames.splice(rand,1)
+      tempGames.splice(rand, 1);
     }
     return newGames;
-  }
+  };
 
   useEffect(() => {
     startGame();
@@ -82,35 +83,33 @@ export default function Classic({ games }: { games: Array<GameObj> }) {
   }, [higher]);
 
   return (
-    <div className="overflow-x-hidden w-screen">
-      <div
-        ref={gameContainer}
-        className={`${
-          justWon ? "animate-slide-left" : ""
-        } h-screen flex justify-between items-center `}
-      >
-        <Game game={game1} isGuess={false} setCount={setCount1}></Game>
-        {/* <div className="flex-3 h-full bg-black w-3">
+    <BaseLayout>
+      <div className="overflow-x-hidden w-screen">
+        <div
+          ref={gameContainer}
+          className={`${
+            justWon ? "animate-slide-left" : ""
+          } h-screen flex justify-between items-center `}
+        >
+          <Game game={game1} isGuess={false} setCount={setCount1}></Game>
+          {/* <div className="flex-3 h-full bg-black w-3">
           <div className="rounded-full h-12 w-12 bg-black flex items-center justify-center text-xl absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10">
             {wins}
           </div>
         </div> */}
-        <Game
-          game={game2}
-          isGuess={true}
-          setCount={setCount2}
-          setHigher={setHigher}
-        ></Game>
-        <Game
-          game={game3}
-          isGuess={true}
-          setHigher={setHigher}
-        ></Game>
-        {displayEndGame && (
-          <EndGame onClick={handleLose} score={wins}></EndGame>
-        )}
+          <Game
+            game={game2}
+            isGuess={true}
+            setCount={setCount2}
+            setHigher={setHigher}
+          ></Game>
+          <Game game={game3} isGuess={true} setHigher={setHigher}></Game>
+          {displayEndGame && (
+            <EndGame onClick={handleLose} score={wins}></EndGame>
+          )}
+        </div>
       </div>
-    </div>
+    </BaseLayout>
   );
 }
 

@@ -6,6 +6,9 @@ module.exports = {
     "./components/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
+    fontFamily: {
+      sans: ["Poppins", "sans-serif"]
+    },
     extend: {
       keyframes: {
         slide: {
@@ -15,6 +18,9 @@ module.exports = {
       },
       animation: {
         'slide-left': 'slide 1s forwards'
+      },
+      fontFamily: {
+        Poppins: ["Poppins", "sans-serif"]
       }
     },
   },
