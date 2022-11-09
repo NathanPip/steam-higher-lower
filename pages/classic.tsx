@@ -1,86 +1,84 @@
 import { PrismaClient } from "@prisma/client";
 import { GetServerSideProps } from "next";
-import { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import BaseLayout from "../components/BaseLayout/BaseLayout";
 import EndGame from "../components/EndGame/EndGame";
 import Game from "../components/Game/game";
 import { delay } from "../lib/helpers";
 import { GameObj } from "../lib/steamUtils";
 
-export default function Classic({ games }: { games: Array<GameObj> }) {
-  const [game1, setGame1] = useState<GameObj>();
-  const [game2, setGame2] = useState<GameObj>();
-  const [game3, setGame3] = useState<GameObj>();
+type ClassicProps = {
+  games: Array<GameObj>;
+}
+
+export type PlayerCount = {
+  playerCounts:{[key: string]: number};
+}
+
+const Classic = ({ games }: ClassicProps) => {
   const [playables, setPlayables] = useState<Array<GameObj>>();
-  const [count1, setCount1] = useState<number>();
-  const [count2, setCount2] = useState<number>();
-  const [higher, setHigher] = useState<boolean>();
+  const [gameEls, setGameEls] = useState<Array<React.ReactNode>>();
+  const [playerCounts, setPlayerCounts] = useState<PlayerCount>({playerCounts:{}});
   const [wins, setWins] = useState(0);
+  const [isHigher, setIsHigher] = useState<boolean>();
   const [justWon, setJustWon] = useState(false);
   const [displayEndGame, setDisplayEndGame] = useState(false);
   const gameContainer = useRef(null);
 
-  const getRandomIndex = () => {
-    return Math.floor(Math.random() * games.length);
-  };
-
-  const handleWin = async () => {
-    if (!game1 || !game2 || !playables) return;
-    const currWins = wins;
-    setWins((prev) => prev + 1);
-    setJustWon(true);
-    await delay(2000);
-    setGame1({ ...game2, playerCount: count2 });
-    setGame2(game3);
-    setGame3(playables[currWins + 3]);
-    setJustWon(false);
-  };
-
-  const handleLose = () => {
-    console.log("lost");
-    setWins(0);
-    setDisplayEndGame(false);
-    startGame();
-  };
+  const getShuffledGames = () => {
+    let tempGames = [...games];
+    let newGames = [];
+    while(tempGames.length) {
+      let rand = Math.floor(Math.random() * tempGames.length);
+      newGames.push(tempGames[rand]);
+      tempGames.splice(rand,1)
+    }
+    return newGames;
+  }
 
   const startGame = () => {
     if (!games) return;
     const newGames = getShuffledGames();
-    setGame1(newGames[0]);
-    setGame2(newGames[1]);
-    setGame3(newGames[2]);
+    const game1 = <Game game={newGames[0]} isHigher={setIsHigher} setPlayerCounts={setPlayerCounts} isStart={true} key={0}></Game>;
+    const game2 = <Game game={newGames[1]} isHigher={setIsHigher} setPlayerCounts={setPlayerCounts} key={1}></Game>;
+    const game3 = <Game game={newGames[2]} isHigher={setIsHigher} setPlayerCounts={setPlayerCounts} key={2}></Game>;
+    setGameEls([game1, game2, game3]);
     setPlayables(newGames);
   };
 
-  const getShuffledGames = () => {
-    let tempGames = [...games];
-    let newGames = [];
-    while (tempGames.length) {
-      let rand = Math.floor(Math.random() * tempGames.length);
-      newGames.push(tempGames[rand]);
-      tempGames.splice(rand, 1);
-    }
-    return newGames;
-  };
+  const handleWin = () => {
+    if(!playables) return;
+    console.log("win")
+    const newGame = <Game game={playables[wins + 3]} isHigher={setIsHigher} setPlayerCounts={setPlayerCounts} key={wins+3}></Game>;
+    setWins(prev => prev+1)
+    setGameEls(prev => [...(prev ?? []), newGame]);
+  }
+
+  const handleLoss = () => {
+    console.log("loss")
+    setWins(0)
+    setPlayerCounts({playerCounts: {}})
+    startGame();
+  }
 
   useEffect(() => {
     startGame();
   }, []);
 
   useEffect(() => {
-    if (higher === undefined || count1 === undefined || count2 === undefined)
-      return;
-    if (
-      (count1 > count2 && higher === false) ||
-      (count1 < count2 && higher === true)
-    ) {
+    if(isHigher === undefined || !playables) return;
+    const prev = playerCounts.playerCounts[playables[wins].appId as keyof PlayerCount];
+    const current = playerCounts.playerCounts[playables[wins + 1].appId as keyof PlayerCount];
+    console.log(prev);
+    console.log(current);
+    if(isHigher && (current > prev) || !isHigher && (current < prev) || current === prev) {
+      setIsHigher(undefined);
       handleWin();
-      setHigher(undefined);
     } else {
-      setDisplayEndGame(true);
-      setHigher(undefined);
+      setIsHigher(undefined);
+      handleLoss();
     }
-  }, [higher]);
+  }, [isHigher]);
 
   return (
     <BaseLayout>
@@ -91,21 +89,9 @@ export default function Classic({ games }: { games: Array<GameObj> }) {
             justWon ? "animate-slide-left" : ""
           } h-screen flex justify-between items-center `}
         >
-          <Game game={game1} isGuess={false} setCount={setCount1}></Game>
-          {/* <div className="flex-3 h-full bg-black w-3">
-          <div className="rounded-full h-12 w-12 bg-black flex items-center justify-center text-xl absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10">
-            {wins}
-          </div>
-        </div> */}
-          <Game
-            game={game2}
-            isGuess={true}
-            setCount={setCount2}
-            setHigher={setHigher}
-          ></Game>
-          <Game game={game3} isGuess={true} setHigher={setHigher}></Game>
+          {gameEls}
           {displayEndGame && (
-            <EndGame onClick={handleLose} score={wins}></EndGame>
+            <EndGame onClick={() => {}} score={wins}></EndGame>
           )}
         </div>
       </div>
@@ -135,3 +121,5 @@ export const getServerSideProps: GetServerSideProps = async () => {
     };
   }
 };
+
+export default Classic;

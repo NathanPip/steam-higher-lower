@@ -1,14 +1,19 @@
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { GameObj } from "../../lib/steamUtils";
+import { PlayerCount } from "../../pages/classic";
 import styles from "./game.module.scss";
 
 type GameProps = {
   game: GameObj | undefined;
-  isGuess: boolean;
-  setCount?: any;
-  setHigher?: any;
+  isStart?: boolean;
+  isHigher: React.Dispatch<React.SetStateAction<boolean | undefined>>;
+  setPlayerCounts: React.Dispatch<React.SetStateAction<PlayerCount>>;
 };
+
+type GameResponse = {
+  playerCount: number;
+}
 
 function steamImageLoader({ src }: { src: string }) {
   return `https://cdn.akamai.steamstatic.com/steam/apps/${src}/header.jpg`;
@@ -18,31 +23,23 @@ const btnStyles = "py-3 px-5 text-5xl rounded-lg bg-gradient-to-br"
 
 export default function Game({
   game,
-  isGuess,
-  setCount,
-  setHigher,
+  isStart,
+  isHigher,
+  setPlayerCounts,
 }: GameProps) {
   let [loading, setLoading] = useState(true);
   let [error, setError] = useState();
   let [playerCount, setPlayerCount] = useState<number>();
-  let [hasClicked, setHasClicked] = useState(false);
+  let [hasClicked, setHasClicked] = useState(isStart ? true : false);
 
   const clickHandler = (higher: boolean) => {
     setHasClicked(true);
-    console.log(isGuess);
-    setHigher(higher);
+    isHigher(higher)
   };
 
   useEffect(() => {
     if (!game) return;
-    setHasClicked(false);
-    if (game.playerCount) {
-      setPlayerCount(game.playerCount);
-      if(setCount)
-        setCount(game.playerCount);
-      setLoading(false);
-      return;
-    }
+    if(!isStart) setHasClicked(false);
     setLoading(true);
     fetch(`/api/game`, {
       method: "POST",
@@ -52,17 +49,19 @@ export default function Game({
         console.log(res);
         return res.json();
       })
-      .then((data) => {
+      .then((data: GameResponse) => {
         setPlayerCount(data.playerCount);
-        if(setCount)
-          setCount(data.playerCount);
+        setPlayerCounts(prev => ({playerCounts: {
+          ...prev.playerCounts,
+          [`${game.appId}`]: data.playerCount
+        }}));
         setLoading(false);
       })
       .catch((err) => {
         setError(err);
         setLoading(false);
       });
-  }, [game, setCount]);
+  }, [game]);
 
   if (!game)
     return <div className="game-price text-2xl mt-5 flex-1 text-center w-1/2">loading</div>;
@@ -98,7 +97,7 @@ export default function Game({
       <div className="z-10">
         <p className="text-lg text-center">currently has</p>
 
-        {isGuess && !hasClicked ? (
+        {hasClicked === false ? (
           <div className="guess-group flex justify-center h-32 gap-6 items-center mt-auto text-xl">
             <button
               onClick={() => clickHandler(true)}
@@ -118,7 +117,7 @@ export default function Game({
           <p
             className={`${styles.game__price} text-8xl h-32 mt-auto text-center z-10 w-fit mx-auto`}
           >
-            {playerCount?.toLocaleString()}
+            {loading ? "loading" : playerCount?.toLocaleString()}
           </p>
         )}
 
