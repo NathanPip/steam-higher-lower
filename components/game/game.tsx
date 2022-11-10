@@ -101,14 +101,14 @@ export default function Game({
           <div className="guess-group flex justify-center h-32 gap-6 items-center mt-auto text-xl">
             <button
               onClick={() => clickHandler(true)}
-              className={`higher ${btnStyles} from-green-300 to-green-600`}
+              className={`${btnStyles} from-blue-300 to-blue-600`}
             >
               higher
             </button>
             Or
             <button
               onClick={() => clickHandler(false)}
-              className={`lower ${btnStyles} from-red-300 to-red-600`}
+              className={`${btnStyles} from-red-300 to-red-600`}
             >
               lower
             </button>

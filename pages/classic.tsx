@@ -1,7 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 import { GetServerSideProps } from "next";
 import React, { useEffect, useRef, useState } from "react";
-import BaseLayout from "../components/BaseLayout/BaseLayout";
+import BackgroundLayout from "../components/BaseLayout/BackgroundLayout";
 import EndGame from "../components/EndGame/EndGame";
 import Game from "../components/Game/game";
 import { delay } from "../lib/helpers";
@@ -84,8 +84,8 @@ const Classic = ({ games }: ClassicProps) => {
   }, [isHigher]);
 
   return (
-    <BaseLayout>
-      <div className="overflow-x-hidden w-screen">
+    <BackgroundLayout>
+      <div className="overflow-x-hidden w-screen animate-fade-in">
         <div
           ref={gameContainer}
           className={`h-screen flex justify-between items-center transition-transform duration-1000`}
@@ -97,7 +97,7 @@ const Classic = ({ games }: ClassicProps) => {
             <EndGame onClick={handleRestart} score={wins}></EndGame>
           )}
       </div>
-    </BaseLayout>
+    </BackgroundLayout>
   );
 }
 
