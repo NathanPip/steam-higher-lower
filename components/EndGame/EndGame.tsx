@@ -11,7 +11,7 @@ export default function EndGame({ onClick, score }: EndGameProps) {
   const [isEnd, setIsEnd] = useState(false);
 
   return (
-    <div className="absolute top-0 left-0 inset-0 bg-zinc-800 bg-opacity-40 flex justify-center items-center z-20">
+    <div className="absolute top-0 left-0 inset-0 bg-zinc-800 bg-opacity-40 flex justify-center items-center z-40">
       <div className="h-96 w-72 flex flex-col bg-steam items-center justify-around text-3xl rounded-md relative">
         <div className={`${isRetry ? "opacity-100" : "opacity-0"} transition-opacity duration-1000 absolute z-10 bg-top-gradient w-full h-full`}></div>
         <div className={`${isEnd ? "opacity-100" : "opacity-0"} transition-opacity duration-1000 absolute z-10 bg-bottom-gradient w-full h-full`}></div>

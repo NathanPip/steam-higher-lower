@@ -86,6 +86,9 @@ const Classic = ({ games }: ClassicProps) => {
   return (
     <BackgroundLayout>
       <div className="overflow-x-hidden w-screen animate-fade-in">
+        <div className="absolute h-screen overflow-x-visible w-2 bg-black z-30 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex justify-center items-center">
+          <div className="absolute h-16 w-16 rounded-full bg-black flex justify-center items-center text-2xl">{wins}</div>
+        </div>
         <div
           ref={gameContainer}
           className={`h-screen flex justify-between items-center transition-transform duration-1000`}
