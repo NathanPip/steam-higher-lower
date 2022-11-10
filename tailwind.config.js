@@ -10,6 +10,9 @@ module.exports = {
       sans: ["Poppins", "sans-serif"]
     },
     extend: {
+      colors: {
+        "steam" : "#171A21"
+      },
       keyframes: {
         slide: {
         '0%': {transform: 'translateX(0)'},
@@ -21,8 +24,9 @@ module.exports = {
         }
       },
       backgroundImage: {
-        'top-gradient': 'linear-gradient(to bottom, #091d3d, rgb(6, 17, 22) 25%)',
-        'bottom-gradient': 'linear-gradient(to top, #3d0909, rgb(6, 17, 22) 25%)',
+        'top-gradient': 'linear-gradient(to bottom, #091d3d, #171A21 25%)',
+        'bottom-gradient': 'linear-gradient(to top, #3d0909, #171A21 25%)',
+        'end-gradient': 'linear-gradient(-20deg, #3d0909, #171A21 30%)',
       },
       animation: {
         'slide-left': 'slide 1s forwards',
