@@ -7,7 +7,7 @@ type EndGameProps = {
 
 export default function EndGame({ onClick, score }: EndGameProps) {
   return (
-    <div className="absolute inset-0 bg-zinc-800 bg-opacity-40 flex justify-center items-center z-20">
+    <div className="absolute top-0 left-0 inset-0 bg-zinc-800 bg-opacity-40 flex justify-center items-center z-20">
       <div className="h-64 w-48 flex flex-col items-center justify-around bg-zinc-800 text-2xl rounded-md">
         <p>
           Your score is

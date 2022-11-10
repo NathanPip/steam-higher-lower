@@ -7,12 +7,12 @@ body {
   margin: 0;
   font-size: 22px;
   color: white;
-  background-color: rgb(6, 17, 22);
+  /* background-color: rgb(6, 17, 22); */
   /* background-image: linear-gradient(to bottom right, rgb(34, 67, 84), rgb(0, 0, 0) 70%) */
 }
 
 #__next {
-  z-index: 10;
+  z-index: -100;
 }
 
 a {

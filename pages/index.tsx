@@ -22,7 +22,7 @@ export default function Home() {
           </span>
         </h2>
         <Link
-          className={`bg-cyan-800 py-2 text-3xl text-white rounded-lg w-40 text-center`}
+          className={`transition-all bg-gradient-to-br from-blue-600 to-black hover:bg-gradient-to-tl py-2 text-3xl text-white rounded-lg w-40 text-center`}
           href="/classic"
         >
           Play

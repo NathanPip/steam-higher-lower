@@ -16,6 +16,10 @@ module.exports = {
         '100%': {transform: 'translateX(-50%)'},
         }
       },
+      backgroundImage: {
+        'top-gradient': 'linear-gradient(to bottom, #091d3d, #000 25%)',
+        'bottom-gradient': 'linear-gradient(to top, #3d0909, #000 25%)',
+      },
       animation: {
         'slide-left': 'slide 1s forwards'
       },

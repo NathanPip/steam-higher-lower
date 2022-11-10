@@ -21,9 +21,9 @@ const Classic = ({ games }: ClassicProps) => {
   const [playerCounts, setPlayerCounts] = useState<PlayerCount>({playerCounts:{}});
   const [wins, setWins] = useState(0);
   const [isHigher, setIsHigher] = useState<boolean>();
-  const [justWon, setJustWon] = useState(false);
+  const [animationAmt, setAnimationAmt] = useState<number>(0);
   const [displayEndGame, setDisplayEndGame] = useState(false);
-  const gameContainer = useRef(null);
+  const gameContainer = useRef<HTMLDivElement>(null);
 
   const getShuffledGames = () => {
     let tempGames = [...games];
@@ -48,17 +48,22 @@ const Classic = ({ games }: ClassicProps) => {
 
   const handleWin = () => {
     if(!playables) return;
-    console.log("win")
+    setAnimationAmt(wins*50+50);
     const newGame = <Game game={playables[wins + 3]} isHigher={setIsHigher} setPlayerCounts={setPlayerCounts} key={wins+3}></Game>;
     setWins(prev => prev+1)
     setGameEls(prev => [...(prev ?? []), newGame]);
   }
 
   const handleLoss = () => {
-    console.log("loss")
+    setDisplayEndGame(true);
+    setAnimationAmt(0);
+  }
+
+  const handleRestart = () => {
     setWins(0)
     setPlayerCounts({playerCounts: {}})
     startGame();
+    setDisplayEndGame(false);
   }
 
   useEffect(() => {
@@ -69,8 +74,6 @@ const Classic = ({ games }: ClassicProps) => {
     if(isHigher === undefined || !playables) return;
     const prev = playerCounts.playerCounts[playables[wins].appId as keyof PlayerCount];
     const current = playerCounts.playerCounts[playables[wins + 1].appId as keyof PlayerCount];
-    console.log(prev);
-    console.log(current);
     if(isHigher && (current > prev) || !isHigher && (current < prev) || current === prev) {
       setIsHigher(undefined);
       handleWin();
@@ -85,15 +88,14 @@ const Classic = ({ games }: ClassicProps) => {
       <div className="overflow-x-hidden w-screen">
         <div
           ref={gameContainer}
-          className={`${
-            justWon ? "animate-slide-left" : ""
-          } h-screen flex justify-between items-center `}
+          className={`h-screen flex justify-between items-center transition-transform duration-1000`}
+          style={{transform: `translateX(-${animationAmt}%)`}}
         >
           {gameEls}
-          {displayEndGame && (
-            <EndGame onClick={() => {}} score={wins}></EndGame>
-          )}
         </div>
+          {displayEndGame && (
+            <EndGame onClick={handleRestart} score={wins}></EndGame>
+          )}
       </div>
     </BaseLayout>
   );
