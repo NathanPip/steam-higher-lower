@@ -34,7 +34,7 @@ model Scores {
 model Highscore {
   id        Int      @id @default(autoincrement())
   createdAt DateTime @default(now())
-  name      String
+  name      String   @default("unknown")
   score     Int
   beaten    Int      @default(0)
   matched   Int      @default(0)

@@ -6,14 +6,17 @@ export default async function handler(
   res: NextApiResponse
 ) {  
   try {
-    let score = await req.body;
-    if(score == undefined) throw new Error("no score was sent");
-    score = parseInt(score);
-    const scoreRes = await prisma.scores.findFirst();
+    let scoreRes: string = await req.body;
+    if(scoreRes == undefined) throw new Error("no score was sent");
+    let score = parseInt(scoreRes);
+    const scoreTotals = await prisma.scores.findFirst();
     let highscores = await prisma.highscore.findMany();
     highscores = highscores.sort((a,z) => a.score - z.score);
-    const highestScore = highscores[0];
+    const highestScore = highscores[0].score;
     const isHighest = score > highestScore;
+    if(isHighest) {
+        await prisma.highscore.create({data: {score: score}})
+    }
     await prisma.highscore.updateMany({
         where: {
             score : {
@@ -50,10 +53,10 @@ export default async function handler(
             }
         }
     })
-    if(scoreRes?.scoreTotal == undefined || scoreRes.scoresAmt === undefined) throw new Error("could not find scores");
-    const avg = Math.ceil((scoreRes.scoreTotal / scoreRes.scoresAmt)*100)/100;
-    let total = scoreRes.scoreTotal + score;
-    let amt = scoreRes.scoresAmt + 1;
+    if(scoreTotals?.scoreTotal == undefined || scoreTotals.scoresAmt === undefined) throw new Error("could not find scores");
+    const avg = Math.ceil((scoreTotals.scoreTotal / scoreTotals.scoresAmt)*100)/100;
+    let total = scoreTotals.scoreTotal + score;
+    let amt = scoreTotals.scoresAmt + 1;
     await prisma.scores.update({
         where: {
             id: 1

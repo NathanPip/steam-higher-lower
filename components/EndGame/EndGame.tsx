@@ -13,6 +13,7 @@ export default function EndGame({ onClick, score }: EndGameProps) {
   const [highestScore, setHighestScore] = useState<number>();
 
   useEffect(() => {
+    return;
     fetch("/api/scores", {
       method: "POST",
       body: JSON.stringify(score)
@@ -37,6 +38,10 @@ export default function EndGame({ onClick, score }: EndGameProps) {
         </p>
         {average ? <p className="z-20 animate-fade-in text-base">
           The average score is {average}
+        </p> : ""}
+        {highestScore ? <p className="z-20 animate-fade-in text-base">
+          The world record is {highestScore}
+          <span className="block text-center">can you beat it?</span>
         </p> : ""}
         <div className="flex flex-col z-20 items-center w-full">
           <button
