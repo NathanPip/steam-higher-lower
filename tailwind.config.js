@@ -13,6 +13,10 @@ module.exports = {
       colors: {
         "steam" : "#171A21"
       },
+      height: {
+        "half": "50vh",
+        "150": "40rem"
+      },
       keyframes: {
         slide: {
         '0%': {transform: 'translateX(0)'},

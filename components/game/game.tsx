@@ -74,7 +74,7 @@ export default function Game({
     );
   return (
     <div
-      className={`${styles.game} w-1/2 flex-1 flex flex-col justify-between items-center h-1/3 relative`}
+      className={`${styles.game} py-24 h-half w-full md:w-1/2 md:h-1/3 md:py-0 flex flex-col justify-between items-center relative`}
     >
       <h2
         className={`${styles.game__title} z-10 text-center px-6 text-5xl w-fit mx-auto flex-1 pb-12`}
@@ -82,7 +82,7 @@ export default function Game({
         {game.title}
       </h2>
 
-      <div className={`absolute top-1/2 left-1/2 h-screen w-full -translate-x-1/2 -translate-y-1/2 flex items-center justify-center`}>
+      <div className={`absolute top-1/2 left-1/2 h-half md:h-screen w-full -translate-x-1/2 -translate-y-1/2 flex items-center justify-center`}>
           <Image
             className={`${styles.steam__img} opacity-50 blur-sm scale-90 z-0 relative brightness-50`}
             loader={steamImageLoader}
