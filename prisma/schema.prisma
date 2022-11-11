@@ -30,3 +30,13 @@ model Scores {
   scoreTotal Int      @default(0)
   scoresAmt  Int      @default(0)
 }
+
+model Highscore {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  name      String
+  score     Int
+  beaten    Int      @default(0)
+  matched   Int      @default(0)
+  attempts  Int      @default(0)
+}

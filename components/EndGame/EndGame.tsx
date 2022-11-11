@@ -10,6 +10,7 @@ export default function EndGame({ onClick, score }: EndGameProps) {
   const [isRetry, setIsRetry] = useState(false);
   const [isEnd, setIsEnd] = useState(false);
   const [average, setAverage] = useState<number>();
+  const [highestScore, setHighestScore] = useState<number>();
 
   useEffect(() => {
     fetch("/api/scores", {
@@ -18,7 +19,8 @@ export default function EndGame({ onClick, score }: EndGameProps) {
     }).then(res => {
       return res.json()
     }).then(data => {
-      setAverage(parseFloat(data));
+      setAverage(parseFloat(data.averageScore));
+      setHighestScore(parseFloat(data.highestScore));
     }).catch(err => {
       console.log(err);
     })
