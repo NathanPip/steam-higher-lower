@@ -34,7 +34,7 @@ module.exports = {
       },
       animation: {
         'slide-left': 'slide 1s forwards',
-        'fade-in': 'fade 1s forwards',
+        'fade-in': 'fade .5s forwards',
         'fade-out': 'fade 2s reverse'
       },
       fontFamily: {

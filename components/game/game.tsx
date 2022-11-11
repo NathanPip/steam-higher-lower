@@ -115,7 +115,7 @@ export default function Game({
           </div>
         ) : (
           <p
-            className={`${styles.game__price} text-8xl h-32 mt-auto text-center z-10 w-fit mx-auto`}
+            className={`${styles.game__price} text-8xl h-32 mt-auto text-center z-10 w-fit mx-auto animate-fade-in`}
           >
             {loading ? "loading" : playerCount?.toLocaleString()}
           </p>

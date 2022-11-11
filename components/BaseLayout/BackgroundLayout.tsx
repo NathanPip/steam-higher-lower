@@ -13,7 +13,7 @@ const BackgroundLayout: FC<Props> = ({children}) => {
         if(!bg.current) return;
         window.addEventListener("mousemove", (e) => {
             if(!bg.current) return;
-            let amt = (window.innerHeight - (e.clientY + 500) * .3) / window.innerHeight;
+            let amt = (window.innerHeight - (e.clientY + 300) * .5) / window.innerHeight;
             if(amt > 1 || amt < 0) {
                 amt = Math.round(amt);
             }

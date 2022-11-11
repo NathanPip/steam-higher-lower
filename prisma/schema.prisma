@@ -22,3 +22,11 @@ model TopSteamGames {
   updatedAt DateTime @updatedAt
   games     String   @default(dbgenerated("(_utf8mb4\\'\\')")) @db.LongText
 }
+
+model Scores {
+  id         Int      @id @default(autoincrement())
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  scoreTotal Int      @default(0)
+  scoresAmt  Int      @default(0)
+}
