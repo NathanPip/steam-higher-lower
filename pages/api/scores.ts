@@ -1,21 +1,27 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { prisma } from "../../lib/prisma";
 
+type scoreRes = {
+    score: number;
+    id: string;
+}
+
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {  
   try {
-    let scoreRes: string = await req.body;
+    let scoreRes: scoreRes = await JSON.parse(req.body);
     if(scoreRes == undefined) throw new Error("no score was sent");
-    let score = parseInt(scoreRes);
+    let score = scoreRes.score;
+    let id = scoreRes.id;
     const scoreTotals = await prisma.scores.findFirst();
     let highscores = await prisma.highscore.findMany();
     highscores = highscores.sort((a,z) => a.score - z.score);
-    const highestScore = highscores[0].score;
+    const highestScore = highscores[highscores.length-1].score;
     const isHighest = score > highestScore;
     if(isHighest) {
-        await prisma.highscore.create({data: {score: score}})
+        await prisma.highscore.create({data: {score: score, id: id}})
     }
     await prisma.highscore.updateMany({
         where: {
@@ -66,7 +72,6 @@ export default async function handler(
             scoresAmt: amt 
         }
     });
-    console.log(avg);
     res.status(200).json({averageScore: avg.toString(), highestScore, isHighest});
   } catch (err) {
     console.log(err);
