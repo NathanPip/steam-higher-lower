@@ -28,9 +28,10 @@ module.exports = {
         }
       },
       backgroundImage: {
-        'top-gradient': 'linear-gradient(to bottom, #091d3d, #171A21 25%)',
-        'bottom-gradient': 'linear-gradient(to top, #3d0909, #171A21 25%)',
-        'end-gradient': 'linear-gradient(-20deg, #3d0909, #171A21 30%)',
+        'top-gradient': 'linear-gradient(to bottom right, #0ea5e9 -60%, #171A21 40%)',
+        'bottom-gradient': 'linear-gradient(to top left, #f43f5e -60%, #171A21 40%)',
+        'retry-gradient': 'linear-gradient(120deg, #0ea5e9 -50%, #171A21 50%)',
+        'end-gradient': 'linear-gradient(-60deg, #f43f5e -50%, #171A21 50%)',
       },
       animation: {
         'slide-left': 'slide 1s forwards',
@@ -43,6 +44,12 @@ module.exports = {
       transitionDuration: {
         '0': '0ms',
         '2000': '2000ms',
+      },
+      boxShadow:{
+        retry: "0px 6px 5px -4px #2563eb",
+        retryHover: "0px 8px 7px -1px #2563eb",
+        end: "0px 6px 5px -4px #f43f5e",
+        endHover: "0px 8px 7px -1px #f43f5e"
       }
     },
   },

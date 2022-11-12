@@ -33,7 +33,6 @@ export default function EndGame({ onClick, score }: EndGameProps) {
   };
 
   useEffect(() => {
-    return;
     fetch("/api/scores", {
       method: "POST",
       body: JSON.stringify({ score, id }),
@@ -58,31 +57,30 @@ export default function EndGame({ onClick, score }: EndGameProps) {
         <div
           className={`${isRetry ? "opacity-100" : "opacity-0"} ${
             isHighest ? "opacity-50" : ""
-          } transition-opacity duration-1000 absolute z-10 bg-top-gradient w-full h-full`}
+          } transition-opacity duration-1000 absolute z-10 bg-retry-gradient w-full h-full`}
         ></div>
         <div
           className={`${isEnd ? "opacity-100" : "opacity-0"} ${
             isHighest ? "opacity-50" : ""
-          } transition-opacity duration-1000 absolute z-10 bg-bottom-gradient w-full h-full`}
+          } transition-opacity duration-1000 absolute z-10 bg-end-gradient w-full h-full`}
         ></div>
         <p className="z-20">
           Your score is
-          <span className="bg-gradient-to-br from-blue-700 to-red-700 bg-clip-text text-transparent block text-center text-6xl mt-2">{score}</span>
+          <span className="bg-gradient-to-br from-blue-700 to-rose-700 bg-clip-text text-transparent block text-center text-8xl mt-2">{score}</span>
         </p>
         <div className="z-20">
-          {average && !isHighest ? (
-            <p className="animate-fade-in text-base mb-6">
-              The average score is 
-              <span className="block text-2xl text-center">{average}</span>
+        {highestScore && !isHighest ? (
+            <p className="animate-fade-in text-base text-center">
+              The world record is 
+              <span className="block text-6xl text-center mb-2">{highestScore}</span>
+              can you beat it?
             </p>
           ) : (
             ""
           )}
-          {highestScore && !isHighest ? (
-            <p className="animate-fade-in text-base text-center">
-              The world record is 
-              <span className="block text-3xl text-center mb-2">{highestScore}</span>
-              can you beat it?
+          {average && !isHighest ? (
+            <p className="animate-fade-in text-base mt-6">
+              The average score is {average}
             </p>
           ) : (
             ""
@@ -90,7 +88,7 @@ export default function EndGame({ onClick, score }: EndGameProps) {
         </div>
         {isHighest ? (
           <>
-            <p className="bg-gradient-to-br from-blue-700 to-red-700 bg-clip-text text-transparent z-20 text-4xl text-center">
+            <p className="bg-gradient-to-br from-blue-700 to-rose-700 bg-clip-text text-transparent z-20 text-4xl text-center">
               {submitMessage ? submitMessage : "The New World Record!"}
             </p>
             {!submitMessage ? (
@@ -99,7 +97,7 @@ export default function EndGame({ onClick, score }: EndGameProps) {
                 onSubmit={handleSubmit}
               >
                 <input
-                  className="text-xl py-1 px-2 rounded-sm w-full text-center bg-zinc-700 relative before:content[''] before:w-full before:h-96 before:absolute before:bg-gradient-to-br before:from-blue-700 before:to-red-700"
+                  className="text-xl py-1 px-2 rounded-md w-full text-center bg-zinc-700 relative"
                   placeholder="what will you go down as?"
                   value={name}
                   onChange={(e) => {
@@ -108,7 +106,7 @@ export default function EndGame({ onClick, score }: EndGameProps) {
                 ></input>
                 <button
                   type="submit"
-                  className="mt-3 bg-gradient-to-br from-blue-700 to-red-700 p-2 rounded-md w-3/4"
+                  className="mt-3 bg-gradient-to-br from-blue-700 to-rose-700 p-2 rounded-md w-3/4"
                 >
                   Submit
                 </button>
@@ -130,8 +128,8 @@ export default function EndGame({ onClick, score }: EndGameProps) {
             }}
             onClick={onClick}
             className="mb-4 w-3/4 py-2 text-center bg-opacity-50 bg-zinc-800 
-            text-2xl rounded-lg transition-all duration-500 shadow-blue-900 
-            shadow-sm hover:shadow-md hover:shadow-blue-900 hover:-translate-y-1"
+            text-2xl rounded-lg transition-all duration-500
+            shadow-retry hover:shadow-retryHover hover:shadow-blue-900 hover:-translate-y-1"
           >
             Retry
           </button>
@@ -144,8 +142,8 @@ export default function EndGame({ onClick, score }: EndGameProps) {
             }}
             href="/"
             className="w-3/4 py-2 text-center rounded-lg flex bg-opacity-50 bg-zinc-800 
-            text-2xl transition-all duration-500 items-center justify-center shadow-red-900 
-            shadow-sm hover:shadow-md hover:shadow-red-900 hover:-translate-y-1"
+            text-2xl transition-all duration-500 items-center justify-center shadow-rose-900 
+            shadow-end hover:shadow-endHover hover:shadow-rose-900 hover:-translate-y-1"
           >
             Exit
           </Link>

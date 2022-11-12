@@ -89,7 +89,7 @@ const Classic = ({ games }: ClassicProps) => {
 
   const handleWin = async () => {
     if (!playables) return;
-    await delay(400)
+    await delay(400);
     setAnimationAmt(wins * 50 + 50);
     const newGame = (
       <Game
@@ -104,9 +104,9 @@ const Classic = ({ games }: ClassicProps) => {
   };
 
   const handleLoss = async () => {
-    await delay(750)
+    await delay(750);
     setDisplayEndGame(true);
-    await delay(250)
+    await delay(250);
     setAnimationAmt(0);
   };
 
@@ -143,16 +143,22 @@ const Classic = ({ games }: ClassicProps) => {
   return (
     <BackgroundLayout>
       <div className="overflow-hidden w-screen h-screen animate-fade-in">
-        <Link href="/" className="absolute top-0 left-0 m-4 text-3xl z-30">Quit</Link>
-        <div className="absolute overflow-x-visible h-2 w-screen md:w-2 md:h-screen bg-black z-30 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex justify-center items-center">
-          <div className="absolute h-16 w-16 rounded-full bg-black flex justify-center items-center text-2xl">
-            {wins}
-          </div>
+        <Link href="/" className="absolute top-0 left-0 m-4 text-3xl z-30">
+          Quit
+        </Link>
+        <div className="absolute h-16 w-16 rounded-full bg-white text-black flex justify-center items-center text-4xl top-1/2 md:top-16 left-1/2 -translate-x-1/2 -translate-y-1/2">
+          {wins}
         </div>
         <div
           ref={gameContainer}
           className={`md:h-screen flex flex-col md:flex-row md:items-center transition-transform duration-1000`}
-          style={{ transform: `${isMobile ? `translateY(-${animationAmt}vh)` : `translateX(-${animationAmt}%)`}`}}
+          style={{
+            transform: `${
+              isMobile
+                ? `translateY(-${animationAmt}vh)`
+                : `translateX(-${animationAmt}%)`
+            }`,
+          }}
         >
           {gameEls}
         </div>
