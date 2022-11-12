@@ -1,5 +1,5 @@
 import Head from "next/head";
-import React, { FC, useEffect, useRef } from "react";
+import React, { FC, useEffect, useRef, useState } from "react";
 
 type Props = {
     children: React.ReactNode;
@@ -8,15 +8,18 @@ type Props = {
 const BackgroundLayout: FC<Props> = ({children}) => {
 
     const bg = useRef<HTMLDivElement>(null);
+    const [animAmt, setAnimAmt] = useState(.5);
 
     useEffect(() => {
         if(!bg.current) return;
+        bg.current.style.opacity = animAmt.toString();
         window.addEventListener("mousemove", (e) => {
             if(!bg.current) return;
             let amt = (window.innerHeight - (e.clientY + 300) * .5) / window.innerHeight;
             if(amt > 1 || amt < 0) {
                 amt = Math.round(amt);
             }
+            setAnimAmt(amt);
             bg.current.style.opacity = amt.toString();
         })
     }, [bg])
