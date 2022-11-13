@@ -5,19 +5,19 @@ import { Highscore } from "@prisma/client";
 import Link from "next/link";
 
 type LeaderBoardProps = {
-    leaderBoard: Highscore[];
-    error: any;
+    leaderBoard: Highscore[] | null;
+    error: any | null;
 }
 
-export default function LeaderBoard({leaderBoard}: LeaderBoardProps) {
-
+export default function LeaderBoard({leaderBoard, error}: LeaderBoardProps) {
+  console.log(error);
   return (
     <BackgroundLayout>
       <div className={`transition-opacity duration-1000 mx-auto flex flex-col items-center h-3/4 animate-fade-in`}>
         <Link className="fixed text-2xl top-0 left-0 m-3 bg-gradient-to-br from-blue-700 to-rose-700 p-2 rounded-md" href="/">Back</Link>
         <h1 className="w-fit my-12 mt-16 text-transparent text-7xl lg:text-8xl bg-clip-text bg-gradient-to-br from-blue-50 via-sky-600 to-black">LeaderBoards</h1>
         <ul>
-          {leaderBoard.map((score, index) => {
+          {leaderBoard && leaderBoard.map((score, index) => {
             return (
             <li className="text-center bg-zinc-800 p-4 my-6" key={index}>
                 <h2 className="text-4xl mb-2">{score.name}</h2>
