@@ -1,7 +1,7 @@
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
-import { GameObj } from "../../lib/steamUtils";
-import { PlayerCount } from "../../pages/classic";
+import { GameObj } from "../lib/steamUtils";
+import { PlayerCount } from "../pages/classic";
 import styles from "../../styles/game-style.module.scss";
 
 type GameProps = {

@@ -2,9 +2,9 @@ import { GetServerSideProps } from "next";
 import { prisma } from "../lib/prisma";
 import Link from "next/link";
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import BackgroundLayout from "../components/BaseLayout/BackgroundLayout";
-import EndGame from "../components/EndGame/EndGame";
-import Game from "../components/Game/Game";
+import BackgroundLayout from "../components/BackgroundLayout";
+import EndGame from "../components/EndGame";
+import Game from "../components/Game";
 import { delay } from "../lib/helpers";
 import { GameObj } from "../lib/steamUtils";
 

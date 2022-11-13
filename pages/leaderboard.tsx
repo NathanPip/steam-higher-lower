@@ -1,6 +1,6 @@
 import { GetServerSideProps } from "next";
 import { prisma } from "../lib/prisma";
-import BackgroundLayout from "../components/BaseLayout/BackgroundLayout";
+import BackgroundLayout from "../components/BackgroundLayout";
 import { Highscore } from "@prisma/client";
 import Link from "next/link";
 

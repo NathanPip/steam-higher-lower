@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import BackgroundLayout from "../components/BaseLayout/BackgroundLayout";
+import BackgroundLayout from "../components/BackgroundLayout";
 
 
 export default function Home() {
