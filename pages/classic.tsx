@@ -1,7 +1,7 @@
 import { GetServerSideProps } from "next";
 import { prisma } from "../lib/prisma";
 import Link from "next/link";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import BackgroundLayout from "../components/BaseLayout/BackgroundLayout";
 import EndGame from "../components/EndGame/EndGame";
 import Game from "../components/Game/game";
@@ -44,7 +44,7 @@ const Classic = ({ games }: ClassicProps) => {
     };
   }, []);
 
-  const getShuffledGames = () => {
+  const getShuffledGames = useCallback(() => {
     let tempGames = [...games];
     let newGames = [];
     while (tempGames.length) {
@@ -53,9 +53,9 @@ const Classic = ({ games }: ClassicProps) => {
       tempGames.splice(rand, 1);
     }
     return newGames;
-  };
+  }, [games]);
 
-  const startGame = () => {
+  const startGame = useCallback(() => {
     if (!games) return;
     const newGames = getShuffledGames();
     const game1 = (
@@ -85,7 +85,7 @@ const Classic = ({ games }: ClassicProps) => {
     );
     setGameEls([game1, game2, game3]);
     setPlayables(newGames);
-  };
+  }, [games, getShuffledGames]);
 
   const handleWin = async () => {
     if (!playables) return;
@@ -119,7 +119,7 @@ const Classic = ({ games }: ClassicProps) => {
 
   useEffect(() => {
     startGame();
-  }, []);
+  }, [startGame]);
 
   useEffect(() => {
     if (isHigher === undefined || !playables) return;
@@ -138,6 +138,7 @@ const Classic = ({ games }: ClassicProps) => {
       setIsHigher(undefined);
       handleLoss();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isHigher]);
 
   return (

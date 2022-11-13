@@ -52,7 +52,7 @@ export default function EndGame({ onClick, score }: EndGameProps) {
         setLoading(false)
       });
     return;
-  }, []);
+  }, [score, id]);
 
   return (
     <div className="absolute top-0 left-0 inset-0 bg-zinc-800 bg-opacity-40 flex justify-center items-center z-40 animate-fade-in">

@@ -61,7 +61,7 @@ export default function Game({
         setError(err);
         setLoading(false);
       });
-  }, [game]);
+  }, [game, isStart, setPlayerCounts]);
 
   if (!game)
     return <div className="game-price text-2xl mt-5 flex-1 text-center w-1/2">loading</div>;
