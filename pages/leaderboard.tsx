@@ -31,6 +31,7 @@ export default function LeaderBoard({leaderBoard, error}: LeaderBoardProps) {
             })
           }
         </ul>
+        {error && "It seems there was an error"}
       </div>
     </BackgroundLayout>
   );
