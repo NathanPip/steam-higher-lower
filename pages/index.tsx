@@ -31,13 +31,22 @@ export default function Home() {
             Lower
           </span>
         </h2>
+        <div className="w-84 grid ">
         <Link
           onClick={() => {setFadeout(true)}}
-          className={`bg-gradient-to-br from-sky-700 to-rose-700 py-2 text-3xl text-white rounded-lg w-40 text-center`}
+          className={`bg-gradient-to-br my-2 from-sky-700 to-rose-700 py-2 text-3xl text-white rounded-lg w-full text-center`}
           href="/classic"
         >
           Play
         </Link>
+        <Link
+          onClick={() => {setFadeout(true)}}
+          className={`bg-gradient-to-tl from-sky-700 px-4 to-rose-700 py-2 text-3xl text-white rounded-lg w-full text-center`}
+          href="/leaderboard"
+        >
+          Leaderboard
+        </Link>
+        </div>
       </div>
     </BackgroundLayout>
   );

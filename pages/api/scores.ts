@@ -15,11 +15,18 @@ export default async function handler(
     if(scoreRes == undefined) throw new Error("no score was sent");
     let score = scoreRes.score;
     let id = scoreRes.id;
+
     const scoreTotals = await prisma.scores.findFirst();
     let highscores = await prisma.highscore.findMany();
     highscores = highscores.sort((a,z) => a.score - z.score);
     const highestScore = highscores[highscores.length-1].score;
     const isHighest = score > highestScore;
+
+    if(scoreTotals?.scoreTotal == undefined || scoreTotals.scoresAmt === undefined) throw new Error("could not find scores");
+    const avg = Math.ceil((scoreTotals.scoreTotal / scoreTotals.scoresAmt)*100)/100;
+    let total = scoreTotals.scoreTotal + score;
+    let amt = scoreTotals.scoresAmt + 1;
+    res.status(200).json({averageScore: avg.toString(), highestScore, isHighest});
     if(isHighest) {
         await prisma.highscore.create({data: {score: score, id: id}})
     }
@@ -59,10 +66,6 @@ export default async function handler(
             }
         }
     })
-    if(scoreTotals?.scoreTotal == undefined || scoreTotals.scoresAmt === undefined) throw new Error("could not find scores");
-    const avg = Math.ceil((scoreTotals.scoreTotal / scoreTotals.scoresAmt)*100)/100;
-    let total = scoreTotals.scoreTotal + score;
-    let amt = scoreTotals.scoresAmt + 1;
     await prisma.scores.update({
         where: {
             id: 1
@@ -72,9 +75,7 @@ export default async function handler(
             scoresAmt: amt 
         }
     });
-    res.status(200).json({averageScore: avg.toString(), highestScore, isHighest});
   } catch (err) {
-    console.log(err);
     res.status(500).json(err);
   }
 }
