@@ -2,6 +2,7 @@ import { GetServerSideProps } from "next";
 import { prisma } from "../lib/prisma";
 import BackgroundLayout from "../components/BaseLayout/BackgroundLayout";
 import { Highscore } from "@prisma/client";
+import Link from "next/link";
 
 type LeaderBoardProps = {
     leaderBoard: Highscore[];
@@ -13,14 +14,22 @@ export default function LeaderBoard({leaderBoard}: LeaderBoardProps) {
   return (
     <BackgroundLayout>
       <div className={`transition-opacity duration-1000 mx-auto flex flex-col items-center h-3/4`}>
+        <Link className="fixed text-2xl top-0 left-0 m-3 bg-gradient-to-br from-blue-700 to-rose-700 p-2 rounded-md" href="/">Back</Link>
         <h1 className="w-fit my-9 text-transparent text-8xl bg-clip-text bg-gradient-to-br from-blue-50 via-sky-600 to-black">LeaderBoards</h1>
         <ul>
-            <li className="text-center">
-                <h2 className="text-4xl">Nather</h2>
+          {leaderBoard.map((score, index) => {
+            return (
+            <li className="text-center bg-zinc-800 p-4 my-6" key={index}>
+                <h2 className="text-4xl mb-2">{score.name}</h2>
                 scored
-                <h3 className="text-6xl">23</h3>
-                <p>which has been beaten 2 times matched 1 time and attempted 56 times</p>
+                <h3 className="text-7xl my-2 bg-gradient-to-br from-sky-500 to-rose-700 bg-clip-text text-transparent">{score.score}</h3>
+                <p>which has been <br /> beaten <span className="text-sky-500 text-xl"> {score.beaten} </span> times <br />
+                matched <span className="text-purple-500 text-xl"> {score.matched} </span> times <br />
+                and <br /> attempted <span className="text-rose-500 text-xl">{score.attempts}</span> times</p>
             </li>
+            )
+            })
+          }
         </ul>
       </div>
     </BackgroundLayout>

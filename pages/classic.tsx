@@ -143,7 +143,7 @@ const Classic = ({ games }: ClassicProps) => {
   return (
     <BackgroundLayout>
       <div className="overflow-hidden w-screen h-screen animate-fade-in">
-        <Link href="/" className="absolute top-0 left-0 m-4 text-3xl z-30">
+        <Link href="/" className="fixed text-2xl top-0 left-0 m-3 bg-gradient-to-br from-blue-700 to-rose-700 p-2 rounded-md z-10">
           Quit
         </Link>
         <div className="absolute h-16 w-16 rounded-full bg-white text-black flex justify-center items-center text-4xl top-1/2 md:top-16 left-1/2 -translate-x-1/2 -translate-y-1/2">
