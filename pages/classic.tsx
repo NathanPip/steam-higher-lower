@@ -9,14 +9,15 @@ import { delay } from "../lib/helpers";
 import { GameObj } from "../lib/steamUtils";
 
 type ClassicProps = {
-  games: Array<GameObj>;
+  games: Array<GameObj> | null;
+  error: any;
 };
 
 export type PlayerCount = {
   playerCounts: { [key: string]: number };
 };
 
-const Classic = ({ games }: ClassicProps) => {
+const Classic = ({ games, error }: ClassicProps) => {
   const [playables, setPlayables] = useState<Array<GameObj>>();
   const [gameEls, setGameEls] = useState<Array<React.ReactNode>>();
   const [playerCounts, setPlayerCounts] = useState<PlayerCount>({
@@ -45,6 +46,7 @@ const Classic = ({ games }: ClassicProps) => {
   }, []);
 
   const getShuffledGames = useCallback(() => {
+    if(!games) return;
     let tempGames = [...games];
     let newGames = [];
     while (tempGames.length) {
@@ -58,6 +60,7 @@ const Classic = ({ games }: ClassicProps) => {
   const startGame = useCallback(() => {
     if (!games) return;
     const newGames = getShuffledGames();
+    if(!newGames) return;
     const game1 = (
       <Game
         game={newGames[0]}
@@ -143,6 +146,7 @@ const Classic = ({ games }: ClassicProps) => {
 
   return (
     <BackgroundLayout>
+      {error && "It seems there was an error"}
       <div className="overflow-hidden w-screen h-screen animate-fade-in">
         <Link href="/" className="fixed text-2xl top-0 left-0 m-3 bg-gradient-to-br from-blue-700 to-rose-700 p-2 rounded-md z-10">
           Quit
