@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { v4 as uuid } from "uuid";
 
 type EndGameProps = {
@@ -18,7 +18,7 @@ export default function EndGame({ onClick, score }: EndGameProps) {
   const [submitMessage, setSubmitMessage] = useState<string>();
   const [id, setId] = useState(uuid());
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     if (!isHighest || !name) return;
     fetch("/api/highscore", {
