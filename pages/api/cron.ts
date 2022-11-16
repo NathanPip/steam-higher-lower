@@ -12,19 +12,20 @@ export default async function handler(
           name: "Games"
         }
       });
+      if(!index || index?.index === null) throw new Error("no data found");
       let games = await scrapeTopGames(index?.index || 1);
-      for(let i=index?.lastCount || 0; i < games.length; i++) {
+      for(let i=index.lastCount; i < games.length+index.lastCount; i++) {
         await prisma.steamGame.upsert({
           where: {
             id: i+1 
           },
           update: {
-            title: games[i].title,
-            appId: games[i].appId
+            title: games[i-index.lastCount].title,
+            appId: games[i-index.lastCount].appId
           },
           create: {
-            title: games[i].title,
-            appId: games[i].appId
+            title: games[i-index.lastCount].title,
+            appId: games[i-index.lastCount].appId
           }
         })
       }
@@ -37,7 +38,7 @@ export default async function handler(
           index: {
             increment: 1
           },
-          lastCount: games.length-1
+          lastCount: games.length-1 + index.lastCount
         }
       })
     } else {
