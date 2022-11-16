@@ -1,22 +1,20 @@
 import Link from "next/link";
-import { FormEvent, useEffect, useState } from "react";
-import { v4 as uuid } from "uuid";
+import { FormEvent, useState } from "react";
 
 type EndGameProps = {
   onClick: any;
   score: number;
+  average: number | undefined;
+  highestScore: number | undefined;
+  isHighest: boolean | undefined;
+  id: string
 };
 
-export default function EndGame({ onClick, score }: EndGameProps) {
+export default function EndGame({ onClick, score, average, highestScore, isHighest, id }: EndGameProps) {
   const [isRetry, setIsRetry] = useState(false);
   const [isEnd, setIsEnd] = useState(false);
-  const [loading, setLoading] = useState(true);
   const [name, setName] = useState("");
-  const [average, setAverage] = useState<number>();
-  const [highestScore, setHighestScore] = useState<number>();
-  const [isHighest, setIsHighest] = useState(false);
   const [submitMessage, setSubmitMessage] = useState<string>();
-  const [id, setId] = useState(uuid());
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
@@ -33,30 +31,8 @@ export default function EndGame({ onClick, score }: EndGameProps) {
       });
   };
 
-  useEffect(() => {
-    setLoading(true)
-    fetch("/api/scores", {
-      method: "POST",
-      body: JSON.stringify({ score, id }),
-    })
-      .then((res) => {
-        return res.json();
-      })
-      .then((data) => {
-        setAverage(parseFloat(data.averageScore));
-        setHighestScore(parseFloat(data.highestScore));
-        setIsHighest(data.isHighest);
-        setLoading(false)
-      })
-      .catch((err) => {
-        setLoading(false)
-      });
-    return;
-  }, [score, id]);
-
   return (
     <div className="absolute top-0 left-0 inset-0 bg-zinc-800 bg-opacity-40 flex justify-center items-center z-40 animate-fade-in">
-      {!loading ? 
       <div className="h-2/3 w-full md:max-h-fit md:w-96 mx-12 flex flex-col bg-steam items-center justify-evenly text-3xl rounded-md relative animate-fade-in">
         <div
           className={`${isRetry ? "opacity-100" : "opacity-0"} ${
@@ -153,7 +129,6 @@ export default function EndGame({ onClick, score }: EndGameProps) {
           </Link>
         </div>
       </div>
-      : "" }
     </div>
   );
 }

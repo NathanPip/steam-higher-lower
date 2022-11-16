@@ -7,13 +7,8 @@ import styles from "../styles/game-style.module.scss";
 type GameProps = {
   game: GameObj | undefined;
   isStart?: boolean;
-  isHigher: React.Dispatch<React.SetStateAction<boolean | undefined>>;
-  setPlayerCounts: React.Dispatch<React.SetStateAction<PlayerCount>>;
+  isHigher: any;
 };
-
-type GameResponse = {
-  playerCount: number;
-}
 
 function steamImageLoader({ src }: { src: string }) {
   return `https://cdn.akamai.steamstatic.com/steam/apps/${src}/header.jpg`;
@@ -25,11 +20,7 @@ export default function Game({
   game,
   isStart,
   isHigher,
-  setPlayerCounts,
 }: GameProps) {
-  let [loading, setLoading] = useState(true);
-  let [error, setError] = useState();
-  let [playerCount, setPlayerCount] = useState<number>();
   let [hasClicked, setHasClicked] = useState(isStart ? true : false);
 
   const clickHandler = (higher: boolean) => {
@@ -38,40 +29,13 @@ export default function Game({
   };
 
   useEffect(() => {
-    if (!game) return;
-    if(!isStart) setHasClicked(false);
-    setLoading(true);
-    fetch(`/api/game`, {
-      method: "POST",
-      body: game.appId,
-    })
-      .then((res) => {
-        console.log(res);
-        return res.json();
-      })
-      .then((data: GameResponse) => {
-        setPlayerCount(data.playerCount);
-        setPlayerCounts(prev => ({playerCounts: {
-          ...prev.playerCounts,
-          [`${game.appId}`]: data.playerCount
-        }}));
-        setLoading(false);
-      })
-      .catch((err) => {
-        setError(err);
-        setLoading(false);
-      });
-  }, [game, isStart, setPlayerCounts]);
+    if (!game || isStart) return;
+    setHasClicked(false);
+  }, [game, isStart])
 
   if (!game)
     return <div className="game-price text-2xl mt-5 flex-1 text-center w-1/2">loading</div>;
 
-  if (error)
-    return (
-      <div className="game-price text-2xl mt-5 text-center">
-        There was an error loading the game
-      </div>
-    );
   return (
     <div
       className={`${styles.game} py-24 h-half w-full md:w-1/2 md:h-1/3 md:py-0 flex flex-col justify-between items-center relative`}
@@ -117,7 +81,7 @@ export default function Game({
           <p
             className={`${styles.game__price} text-8xl h-32 mt-auto text-center z-10 w-fit mx-auto animate-fade-in`}
           >
-            {loading ? "loading" : playerCount?.toLocaleString()}
+            {game.playerCount?.toLocaleString()}
           </p>
         )}
 

@@ -3,6 +3,7 @@ import { prisma } from "../../lib/prisma";
 
 type scoreRes = {
     score: number;
+    isHighest: boolean;
     id: string;
 }
 
@@ -11,25 +12,43 @@ export default async function handler(
   res: NextApiResponse
 ) {  
   try {
-    let scoreRes: scoreRes = await JSON.parse(req.body);
-    if(scoreRes == undefined) throw new Error("no score was sent");
-    let score = scoreRes.score;
-    let id = scoreRes.id;
+    if(req.method === "GET") {
+        const scoreTotals = await prisma.scores.findFirst();
+        let highscores = await prisma.highscore.findMany();
+        highscores = highscores.sort((a,z) => a.score - z.score);
+        const highestScore = highscores[highscores.length-1].score;
+        if(scoreTotals?.scoreTotal == undefined || scoreTotals.scoresAmt === undefined) throw new Error("could not find scores");
+        const avg = Math.ceil((scoreTotals.scoreTotal / scoreTotals.scoresAmt)*100)/100;
+        console.log("done");
+        res.status(200).json({averageScore: avg.toString(), highestScore});
+        return;
+    }
 
-    const scoreTotals = await prisma.scores.findFirst();
+    let scoreRes = await JSON.parse(req.body) as scoreRes;
+    if(scoreRes == undefined) throw new Error("no score was sent");
+    const {score, id} = scoreRes;
     let highscores = await prisma.highscore.findMany();
     highscores = highscores.sort((a,z) => a.score - z.score);
     const highestScore = highscores[highscores.length-1].score;
-    const isHighest = score > highestScore;
 
-    if(scoreTotals?.scoreTotal == undefined || scoreTotals.scoresAmt === undefined) throw new Error("could not find scores");
-    const avg = Math.ceil((scoreTotals.scoreTotal / scoreTotals.scoresAmt)*100)/100;
-    let total = scoreTotals.scoreTotal + score;
-    let amt = scoreTotals.scoresAmt + 1;
-    res.status(200).json({averageScore: avg.toString(), highestScore, isHighest});
-    if(isHighest) {
-        await prisma.highscore.create({data: {score: score, id: id}})
-    }
+    await prisma.scores.upsert({
+        where: {
+            id: 1
+        },
+        update: {
+            scoreTotal: {
+                increment: score
+            },
+            scoresAmt: {
+                increment: 1
+            } 
+        },
+        create: {
+            scoreTotal: score,
+            scoresAmt: 1
+        }
+    });
+
     await prisma.highscore.updateMany({
         where: {
             score : {
@@ -66,16 +85,16 @@ export default async function handler(
             }
         }
     })
-    await prisma.scores.update({
-        where: {
-            id: 1
-        },
-        data: {
-            scoreTotal: total,
-            scoresAmt: amt 
-        }
-    });
+
+    if(highestScore < score) {
+        await prisma.highscore.create({data: {score: score, id: id}})
+    }
+    
+    res.status(200).json({isHighest: highestScore < score});
+    return;
   } catch (err) {
     res.status(500).json(err);
+    console.log(err);
+    return;
   }
 }
