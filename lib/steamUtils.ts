@@ -7,7 +7,7 @@ export type GameObj = {
     playerCount?: number;
 }
 
-export const scrapeTopGames = async (gameObjs: GameObj[] = [], pageNum = 1): Promise<GameObj[]> => {
+export const scrapeTopGames = async (pageNum = 1, gameObjs: GameObj[] = []): Promise<GameObj[]> => {
     const response = await fetch(`https://store.steampowered.com/search/?category1=998&filter=topsellers&supportedlang=english&page=${pageNum}`);
     const htmlText = await response.text();
     const $ = cheerio.load(htmlText);
@@ -20,13 +20,8 @@ export const scrapeTopGames = async (gameObjs: GameObj[] = [], pageNum = 1): Pro
         let date = new Date(release);
         if(now.getTime() > date.getTime())
             gameObjs.push({title, appId});
-    })
-    
-    if(gameObjs.length < 200) {
-        return scrapeTopGames(gameObjs, pageNum+1);
-    } else {
-        return gameObjs;
-    }
+    })   
+    return gameObjs;
 }
 
 export const getRandomGame = (games: Array<GameObj>) => {

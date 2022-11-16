@@ -6,18 +6,52 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  
   try {
-      let games = await scrapeTopGames();
-      await prisma.topSteamGames.update({
+      let index = await prisma.index.findUnique({
         where: {
-          id: 1
-        },
+          name: "Games"
+        }
+      });
+      let games = await scrapeTopGames(index?.index || 1);
+      for(let i=index?.lastCount || 0; i < games.length; i++) {
+        await prisma.steamGame.upsert({
+          where: {
+            id: i+1 
+          },
+          update: {
+            title: games[i].title,
+            appId: games[i].appId
+          },
+          create: {
+            title: games[i].title,
+            appId: games[i].appId
+          }
+        })
+      }
+      if(index && index.index < 5){
+      await prisma.index.update({
+        where: {
+          name: "Games"
+        }, 
         data: {
-          games: JSON.stringify(games)
+          index: {
+            increment: 1
+          },
+          lastCount: games.length-1
         }
       })
-      res.status(200).json({success: true});
+    } else {
+      await prisma.index.update({
+        where: {
+          name: "Games"
+        }, 
+        data: {
+          index: 1,
+          lastCount: 0
+        }
+      })
+    }
+      res.status(200).json({games: games});
   } catch (err) {
     console.log(err);
     res.status(500).json(err);
