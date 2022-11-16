@@ -1,4 +1,4 @@
-import playwright from "playwright";
+import cheerio from "cheerio";
 
 export type GameObj = {
     title: string;
@@ -7,42 +7,22 @@ export type GameObj = {
     playerCount?: number;
 }
 
-export const scrapeTopGames = async () => {
-    const browser = await playwright.chromium.launch();
-
-    const page = await browser.newPage();
-    await page.goto("https://store.steampowered.com/search/?category1=998&os=win&filter=topsellers");
-
-    for(let i=0; i<10; i++) {
-        await page.mouse.wheel(0, 2000);
-        await page.waitForTimeout(500);
-    }
-
-    await page.waitForSelector('#search_resultsRows');
-
-    let games = await page.$eval("#search_resultsRows", (list) => {
-      let games = []
-        for(let i =0; i < list.children.length; i++) {
-            let game = {title: "NA", appId: "NA"};
-            const gameId = list.children[i].getAttribute("data-ds-appid");
-            const gameTitle = list.children[i].querySelector(".title")?.innerHTML;
-            const releaseDate = list.children[i].querySelector(".search_released")?.innerHTML.trim();
-            const now = new Date(); 
-            let date: (Date | undefined) = undefined;
-            if(releaseDate){
-                date = new Date(releaseDate);
-                if(now.getTime() < date.getTime()) {
-                    continue;
-                }
-            } 
-            if(gameId) game.appId = gameId;
-            if(gameTitle) game.title = gameTitle;
-            games.push(game)
-        }
-        return games;
+export const scrapeTopGames = async (gameObjs: GameObj[] = [], pageNum = 1): Promise<GameObj[]> => {
+    const response = await fetch(`https://store.steampowered.com/search/?category1=998&filter=topsellers&supportedlang=english&page=${pageNum}`);
+    const htmlText = await response.text();
+    const $ = cheerio.load(htmlText);
+    const gameEls = $(".search_result_row");
+    gameEls.each((i, el) => {
+        const title = $(el).find('.title').text();
+        const appId = $(el).attr('data-ds-appid') || "";
+        gameObjs.push({title, appId});
     })
-    await browser.close();
-    return games;
+    
+    if(gameObjs.length < 200) {
+        return scrapeTopGames(gameObjs, pageNum+1);
+    } else {
+        return gameObjs;
+    }
 }
 
 export const getRandomGame = (games: Array<GameObj>) => {
