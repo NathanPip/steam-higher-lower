@@ -49,7 +49,9 @@ module.exports = {
         retry: "0px 6px 5px -4px #2563eb",
         retryHover: "0px 8px 7px -1px #2563eb",
         end: "0px 6px 5px -4px #f43f5e",
-        endHover: "0px 8px 7px -1px #f43f5e"
+        endHover: "0px 8px 7px -1px #f43f5e",
+        higherHover: "0px 15px 15px 7px #2563eb",
+        lowerHover: "0px -15px 15px 7px #f43f5e"
       }
     },
   },

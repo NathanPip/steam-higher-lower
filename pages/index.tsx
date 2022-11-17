@@ -34,14 +34,14 @@ export default function Home() {
         <div className="w-84 grid ">
         <Link
           onClick={() => {setFadeout(true)}}
-          className={`bg-gradient-to-br my-2 from-sky-700 to-rose-700 py-2 text-3xl text-white rounded-lg w-full text-center`}
+          className={`bg-gradient-to-br my-2 from-sky-700 to-rose-700 py-2 text-3xl text-white rounded-lg w-full text-center brightness-100 hover:brightness-125 transition-all duration-300`}
           href="/classic"
         >
           Play
         </Link>
         <Link
           onClick={() => {setFadeout(true)}}
-          className={`bg-gradient-to-tl from-sky-700 px-4 to-rose-700 py-2 text-3xl text-white rounded-lg w-full text-center`}
+          className={`bg-gradient-to-tl from-sky-700 px-4 to-rose-700 py-2 text-3xl text-white rounded-lg w-full text-center brightness-100 hover:brightness-125 transition-all duration-300`}
           href="/leaderboard"
         >
           Leaderboard

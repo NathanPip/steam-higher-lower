@@ -163,7 +163,7 @@ const Classic = ({ games, error }: ClassicProps) => {
     <BackgroundLayout>
       {error && "It seems there was an error"}
       <div className="overflow-hidden w-screen h-screen animate-fade-in">
-        <Link href="/" className="fixed text-2xl top-0 left-0 m-3 bg-gradient-to-br from-blue-700 to-rose-700 p-2 rounded-md z-10">
+        <Link href="/" className="fixed text-2xl top-0 left-0 m-3 bg-gradient-to-br from-blue-700 to-rose-700 p-2 rounded-md z-10 brightness-100 hover:brightness-125 transition-all duration-300">
           Quit
         </Link>
         <div className="absolute h-16 w-16 rounded-full bg-white text-black flex justify-center items-center text-4xl top-1/2 md:top-16 left-1/2 -translate-x-1/2 -translate-y-1/2">

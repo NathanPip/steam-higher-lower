@@ -17,7 +17,7 @@ export default function LeaderBoard({ leaderBoard, error }: LeaderBoardProps) {
         className={`transition-opacity duration-1000 mx-auto flex flex-col items-center h-3/4 animate-fade-in`}
       >
         <Link
-          className="fixed text-2xl top-0 left-0 m-3 bg-gradient-to-br from-blue-700 to-rose-700 p-2 rounded-md"
+          className="fixed text-2xl top-0 left-0 m-3 bg-gradient-to-br from-blue-700 to-rose-700 p-2 rounded-md brightness-100 hover:brightness-125 transition-all duration-300"
           href="/"
         >
           Back
