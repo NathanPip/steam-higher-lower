@@ -33,7 +33,7 @@ export default function EndGame({ onClick, score, average, highestScore, isHighe
 
   return (
     <div className="absolute top-0 left-0 inset-0 bg-zinc-800 bg-opacity-40 flex justify-center items-center z-40 animate-fade-in">
-      <div className="h-2/3 w-full md:max-h-fit md:w-96 mx-12 flex flex-col bg-steam items-center justify-evenly text-3xl rounded-md relative animate-fade-in">
+      <div className="w-full md:max-h-fit md:w-96 mx-12 flex flex-col bg-steam items-center justify-evenly text-3xl rounded-md relative animate-fade-in">
         <div
           className={`${isRetry ? "opacity-100" : "opacity-0"} ${
             isHighest ? "opacity-50" : ""
@@ -44,7 +44,7 @@ export default function EndGame({ onClick, score, average, highestScore, isHighe
             isHighest ? "opacity-50" : ""
           } transition-opacity duration-1000 absolute z-10 bg-end-gradient w-full h-full`}
         ></div>
-        <p className="z-20">
+        <p className="z-20 pt-4">
           Your score is
           <span className="bg-gradient-to-br from-blue-700 to-rose-700 bg-clip-text text-transparent block text-center text-8xl mt-2">{score}</span>
         </p>
@@ -98,7 +98,7 @@ export default function EndGame({ onClick, score, average, highestScore, isHighe
         ) : (
           ""
         )}
-        <div className="flex flex-col z-20 items-center w-full">
+        <div className="flex flex-col z-20 items-center w-full my-6">
           <button
             onMouseEnter={() => {
               setIsRetry(true);

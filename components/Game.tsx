@@ -14,7 +14,7 @@ function steamImageLoader({ src }: { src: string }) {
   return `https://cdn.akamai.steamstatic.com/steam/apps/${src}/header.jpg`;
 }
 
-const btnStyles = "py-3 px-5 text-5xl rounded-lg "
+const btnStyles = "py-3 px-5 text-4xl rounded-lg "
 
 export default function Game({
   game,
@@ -62,7 +62,7 @@ export default function Game({
         <p className="text-lg text-center">currently has</p>
 
         {hasClicked === false ? (
-          <div className="guess-group flex justify-center h-32 gap-6 items-center mt-auto text-xl">
+          <div className="guess-group flex justify-center h-32 gap-3 items-center mt-auto text-xl">
             <button
               onClick={() => clickHandler(true)}
               className={`${btnStyles} bg-gradient-to-r from-blue-300 to-blue-600`}

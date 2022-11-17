@@ -22,7 +22,7 @@ export default function LeaderBoard({ leaderBoard, error }: LeaderBoardProps) {
         >
           Back
         </Link>
-        <h1 className="w-fit my-12 mt-16 text-transparent text-7xl lg:text-8xl bg-clip-text bg-gradient-to-br from-blue-50 via-sky-600 to-black">
+        <h1 className="w-fit my-12 mt-16 text-transparent text-6xl lg:text-8xl bg-clip-text bg-gradient-to-br from-blue-50 via-sky-600 to-black">
           LeaderBoards
         </h1>
         <ul>

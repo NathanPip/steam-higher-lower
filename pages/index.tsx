@@ -19,7 +19,7 @@ export default function Home() {
       <div className={`${fadeout || fadein ? 'opacity-0' : 'opacity-100'} transition-opacity duration-1000 mx-auto flex flex-col justify-center items-center max-h-screen`}>
         <h1 className="inline-block w-fit my-5 text-transparent text-8xl bg-clip-text bg-gradient-to-br from-blue-50 via-sky-600 to-black">
           Steam
-        <span className="inline text-6xl text-white">
+        <span className="md:inline block text-center text-6xl text-white">
           Charts
         </span>
         </h1>
