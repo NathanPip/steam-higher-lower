@@ -5,7 +5,7 @@ import { Highscore } from "@prisma/client";
 import Link from "next/link";
 
 type LeaderBoardProps = {
-  leaderBoard: Highscore[] | null;
+  leaderBoard: Highscore[];
   error: any | null;
 };
 
@@ -26,7 +26,7 @@ export default function LeaderBoard({ leaderBoard, error }: LeaderBoardProps) {
           LeaderBoards
         </h1>
         <ul>
-          {leaderBoard &&
+          {leaderBoard.length ?
             leaderBoard.map((score, index) => {
               return (
                 <li className="text-center bg-zinc-800 bg-opacity-30 rounded-lg p-4 my-6 w-96 max-w-full" key={index}>
@@ -58,7 +58,7 @@ export default function LeaderBoard({ leaderBoard, error }: LeaderBoardProps) {
                   </div>
                 </li>
               );
-            })}
+            }) : <p className="text-xl text-center">{"It's deserted"}</p>}
         </ul>
         {error && "It seems there was an error"}
       </div>
