@@ -7,6 +7,8 @@ import EndGame from "../components/EndGame";
 import Game from "../components/Game";
 import { delay } from "../lib/helpers";
 import { GameObj } from "../lib/steamUtils";
+import { v4 as uuid } from "uuid";
+
 
 type ClassicProps = {
   games: Array<GameObj> | null;
@@ -20,14 +22,15 @@ export type PlayerCount = {
 const Classic = ({ games, error }: ClassicProps) => {
   const [playables, setPlayables] = useState<Array<GameObj>>();
   const [gameEls, setGameEls] = useState<Array<React.ReactNode>>();
-  const [playerCounts, setPlayerCounts] = useState<PlayerCount>({
-    playerCounts: {},
-  });
   const [wins, setWins] = useState(0);
   const [isHigher, setIsHigher] = useState<boolean>();
   const [animationAmt, setAnimationAmt] = useState<number>(0);
   const [displayEndGame, setDisplayEndGame] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const [average, setAverage] = useState<number>();
+  const [highestScore, setHighestScore] = useState<number>();
+  const [isHighest, setIsHighest] = useState(false);
+  const [id] = useState(uuid());
   const gameContainer = useRef<HTMLDivElement>(null);
 
   const handleWindowSizeChange = () => {
@@ -65,7 +68,6 @@ const Classic = ({ games, error }: ClassicProps) => {
       <Game
         game={newGames[0]}
         isHigher={setIsHigher}
-        setPlayerCounts={setPlayerCounts}
         isStart={true}
         key={0}
       ></Game>
@@ -74,7 +76,6 @@ const Classic = ({ games, error }: ClassicProps) => {
       <Game
         game={newGames[1]}
         isHigher={setIsHigher}
-        setPlayerCounts={setPlayerCounts}
         key={1}
       ></Game>
     );
@@ -82,7 +83,6 @@ const Classic = ({ games, error }: ClassicProps) => {
       <Game
         game={newGames[2]}
         isHigher={setIsHigher}
-        setPlayerCounts={setPlayerCounts}
         key={2}
       ></Game>
     );
@@ -98,7 +98,6 @@ const Classic = ({ games, error }: ClassicProps) => {
       <Game
         game={playables[wins + 3]}
         isHigher={setIsHigher}
-        setPlayerCounts={setPlayerCounts}
         key={wins + 3}
       ></Game>
     );
@@ -107,15 +106,33 @@ const Classic = ({ games, error }: ClassicProps) => {
   };
 
   const handleLoss = async () => {
-    await delay(750);
+    await fetch("/api/scores", {
+      method: "GET",
+    })
+      .then((res) => {
+        return res.json();
+      })
+      .then((data) => {
+        setAverage(parseFloat(data.averageScore));
+        setHighestScore(parseFloat(data.highestScore));
+        setIsHighest(wins > data.highestScore);
+      })
+      .catch((err) => {
+      });
+
     setDisplayEndGame(true);
+
+    await fetch("/api/scores", {
+      method: "POST",
+      body: JSON.stringify({score: wins, id: id})
+    })
+
     await delay(250);
     setAnimationAmt(0);
   };
 
   const handleRestart = () => {
     setWins(0);
-    setPlayerCounts({ playerCounts: {} });
     startGame();
     setDisplayEndGame(false);
   };
@@ -126,10 +143,8 @@ const Classic = ({ games, error }: ClassicProps) => {
 
   useEffect(() => {
     if (isHigher === undefined || !playables) return;
-    const prev =
-      playerCounts.playerCounts[playables[wins].appId as keyof PlayerCount];
-    const current =
-      playerCounts.playerCounts[playables[wins + 1].appId as keyof PlayerCount];
+    const prev = playables[wins].playerCount || 0;
+    const current = playables[wins + 1].playerCount || 0;
     if (
       (isHigher && current > prev) ||
       (!isHigher && current < prev) ||
@@ -148,7 +163,7 @@ const Classic = ({ games, error }: ClassicProps) => {
     <BackgroundLayout>
       {error && "It seems there was an error"}
       <div className="overflow-hidden w-screen h-screen animate-fade-in">
-        <Link href="/" className="fixed text-2xl top-0 left-0 m-3 bg-gradient-to-br from-blue-700 to-rose-700 p-2 rounded-md z-10">
+        <Link href="/" className="fixed text-2xl top-0 left-0 m-3 bg-gradient-to-br from-blue-700 to-rose-700 p-2 rounded-md z-10 brightness-100 hover:brightness-125 transition-all duration-300">
           Quit
         </Link>
         <div className="absolute h-16 w-16 rounded-full bg-white text-black flex justify-center items-center text-4xl top-1/2 md:top-16 left-1/2 -translate-x-1/2 -translate-y-1/2">
@@ -168,7 +183,7 @@ const Classic = ({ games, error }: ClassicProps) => {
           {gameEls}
         </div>
         {displayEndGame && (
-          <EndGame onClick={handleRestart} score={wins}></EndGame>
+          <EndGame onClick={handleRestart} score={wins} average={average} highestScore={highestScore} isHighest={isHighest} id={id}></EndGame>
         )}
       </div>
     </BackgroundLayout>
@@ -177,10 +192,17 @@ const Classic = ({ games, error }: ClassicProps) => {
 
 export const getServerSideProps: GetServerSideProps = async () => {
   try {
-    const games = await prisma.topSteamGames.findFirst();
+    const games = await prisma.steamGame.findMany({
+      where: {
+        playerCount: {
+          gt: 0
+        }
+      }
+    });
     if (!games) throw new Error("no games found");
-    console.log(games.games);
-    let gameArr = JSON.parse(games.games);
+    let gameArr = games.map(game => {
+      return {id: game.id, title: game.title, playerCount: game.playerCount, appId: game.appId}
+    });
     return {
       props: {
         games: gameArr,
