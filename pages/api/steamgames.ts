@@ -7,6 +7,7 @@ export default async function handler(
   res: NextApiResponse
 ) {
   try {
+      const pageCount = 6;
       let index = await prisma.index.findUnique({
         where: {
           name: "Games"
@@ -29,7 +30,7 @@ export default async function handler(
           }
         })
       }
-      if(index && index.index < 5){
+      if(index && index.index < pageCount){
       await prisma.index.update({
         where: {
           name: "Games"
