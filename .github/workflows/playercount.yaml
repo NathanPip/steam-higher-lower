@@ -1,4 +1,4 @@
-name: minutely-cron
+name: counts-cron
 on:
   schedule:
     - cron: '* * * * *'
@@ -6,8 +6,8 @@ jobs:
   cron:
     runs-on: ubuntu-latest
     steps:
-      - name: Call our API route
+      - name: Call player count api route
         run: |
           curl --request POST \
           --url 'https://steam-higher-lower.vercel.app/api/playercounts' \
-          --header 'Authorization: Bearer ${{ secrets.API_SECRET_KEY }}'
+          --header 'Authorization: ${{ secrets.API_SECRET_KEY }}'

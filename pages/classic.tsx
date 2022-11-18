@@ -30,7 +30,7 @@ const Classic = ({ games, error }: ClassicProps) => {
   const [average, setAverage] = useState<number>();
   const [highestScore, setHighestScore] = useState<number>();
   const [isHighest, setIsHighest] = useState(false);
-  const [id] = useState(uuid());
+  const [id, setId] = useState(uuid());
   const gameContainer = useRef<HTMLDivElement>(null);
 
   const handleWindowSizeChange = () => {
@@ -133,6 +133,7 @@ const Classic = ({ games, error }: ClassicProps) => {
 
   const handleRestart = () => {
     setWins(0);
+    setId(uuid());
     startGame();
     setDisplayEndGame(false);
   };

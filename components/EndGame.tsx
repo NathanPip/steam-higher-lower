@@ -1,5 +1,7 @@
 import Link from "next/link";
-import { FormEvent, useState } from "react";
+import { FormEvent, useRef, useState } from "react";
+// @ts-ignore 
+import swearjar from "swearjar";
 
 type EndGameProps = {
   onClick: any;
@@ -15,10 +17,13 @@ export default function EndGame({ onClick, score, average, highestScore, isHighe
   const [isEnd, setIsEnd] = useState(false);
   const [name, setName] = useState("");
   const [submitMessage, setSubmitMessage] = useState<string>();
+  const input = useRef<HTMLInputElement>(null);
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     if (!isHighest || !name) return;
+    const isProfane: boolean = swearjar.profane(name);
+    if(!isProfane){
     fetch("/api/highscore", {
       method: "POST",
       body: JSON.stringify({ name, id }),
@@ -29,6 +34,10 @@ export default function EndGame({ onClick, score, average, highestScore, isHighe
       .catch(() => {
         setSubmitMessage("Something went wrong");
       });
+    } else {
+      setName("");
+      input.current!.placeholder = "Try again"
+    }
   };
 
   return (
@@ -80,6 +89,7 @@ export default function EndGame({ onClick, score, average, highestScore, isHighe
                   className="text-xl py-1 px-2 rounded-md w-full text-center bg-zinc-700 relative"
                   placeholder="what will you go down as?"
                   value={name}
+                  ref={input}
                   onChange={(e) => {
                     setName(e.target.value);
                   }}
