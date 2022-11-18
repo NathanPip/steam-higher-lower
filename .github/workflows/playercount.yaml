@@ -1,4 +1,4 @@
-name: minutely-cron
+name: counts-cron
 on:
   schedule:
     - cron: '* * * * *'
