@@ -21,7 +21,7 @@ export default async function handler(
     const headers = req.headers as Headers;
     const auth = headers.Authorization;
     if(auth !== process.env.API_SECRET_KEY) throw new Error("Not Authorized");
-    const gameAmt = 25;
+    const gameAmt = 15;
     const index = await prisma.index.findUnique({
       where: {
         name: "PlayerCounts",
