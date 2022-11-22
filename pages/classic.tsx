@@ -1,4 +1,4 @@
-import type { GetServerSideProps } from "next";
+import type { GetServerSideProps, NextPage } from "next";
 import { prisma } from "../server/db/client";
 import Link from "next/link";
 import React, { useCallback, useEffect, useRef, useState } from "react";
@@ -8,7 +8,7 @@ import Game from "../components/Game";
 import { delay } from "../utils/helpers";
 import type { GameObj } from "../utils/steamUtils";
 import { v4 as uuid } from "uuid";
-
+import { trpc } from "../utils/trpc";
 
 type ClassicProps = {
   games: Array<GameObj> | null;
@@ -19,7 +19,7 @@ export type PlayerCount = {
   playerCounts: { [key: string]: number };
 };
 
-const Classic = ({ games, error }: ClassicProps) => {
+const Classic: NextPage<ClassicProps> = ({ games, error }) => {
   const [playables, setPlayables] = useState<Array<GameObj>>();
   const [gameEls, setGameEls] = useState<Array<React.ReactNode>>();
   const [wins, setWins] = useState(0);
@@ -27,11 +27,10 @@ const Classic = ({ games, error }: ClassicProps) => {
   const [animationAmt, setAnimationAmt] = useState<number>(0);
   const [displayEndGame, setDisplayEndGame] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
-  const [average, setAverage] = useState<number>();
-  const [highestScore, setHighestScore] = useState<number>();
-  const [isHighest, setIsHighest] = useState(false);
   const [id, setId] = useState(uuid());
   const gameContainer = useRef<HTMLDivElement>(null);
+  const scores = trpc.scores.getScores.useQuery()
+  const scoreMutation = trpc.scores.postScores.useMutation()
 
   const handleWindowSizeChange = () => {
     if (window.innerWidth <= 768) {
@@ -49,7 +48,7 @@ const Classic = ({ games, error }: ClassicProps) => {
   }, []);
 
   const getShuffledGames = useCallback(() => {
-    if(!games) return;
+    if (!games) return;
     const tempGames = [...games];
     const newGames: GameObj[] = [];
     while (tempGames.length) {
@@ -64,7 +63,7 @@ const Classic = ({ games, error }: ClassicProps) => {
   const startGame = useCallback(() => {
     if (!games) return;
     const newGames = getShuffledGames();
-    if(!newGames) return;
+    if (!newGames) return;
     const game1 = (
       <Game
         game={newGames[0]}
@@ -74,18 +73,10 @@ const Classic = ({ games, error }: ClassicProps) => {
       ></Game>
     );
     const game2 = (
-      <Game
-        game={newGames[1]}
-        isHigher={setIsHigher}
-        key={1}
-      ></Game>
+      <Game game={newGames[1]} isHigher={setIsHigher} key={1}></Game>
     );
     const game3 = (
-      <Game
-        game={newGames[2]}
-        isHigher={setIsHigher}
-        key={2}
-      ></Game>
+      <Game game={newGames[2]} isHigher={setIsHigher} key={2}></Game>
     );
     setGameEls([game1, game2, game3]);
     setPlayables(newGames);
@@ -107,27 +98,9 @@ const Classic = ({ games, error }: ClassicProps) => {
   };
 
   const handleLoss = async () => {
-    await fetch("/api/scores", {
-      method: "GET",
-    })
-      .then((res) => {
-        return res.json();
-      })
-      .then((data) => {
-        setAverage(parseFloat(data.averageScore));
-        setHighestScore(parseFloat(data.highestScore));
-        setIsHighest(wins > data.highestScore);
-      })
-      .catch((err) => {
-      });
-
+    scores.refetch();
     setDisplayEndGame(true);
-
-    await fetch("/api/scores", {
-      method: "POST",
-      body: JSON.stringify({score: wins, id: id})
-    })
-
+    scoreMutation.mutate({ id, score: wins });
     await delay(250);
     setAnimationAmt(0);
   };
@@ -165,7 +138,10 @@ const Classic = ({ games, error }: ClassicProps) => {
     <BackgroundLayout>
       {error && "It seems there was an error"}
       <div className="overflow-hidden w-screen h-screen animate-fade-in">
-        <Link href="/" className="fixed text-2xl top-0 left-0 m-3 bg-gradient-to-br from-blue-700 to-rose-700 p-2 rounded-md z-10 brightness-100 hover:brightness-125 transition-all duration-300">
+        <Link
+          href="/"
+          className="fixed text-2xl top-0 left-0 m-3 bg-gradient-to-br from-blue-700 to-rose-700 p-2 rounded-md z-10 brightness-100 hover:brightness-125 transition-all duration-300"
+        >
           Quit
         </Link>
         <div className="absolute h-16 w-16 rounded-full bg-white text-black flex justify-center items-center text-4xl top-1/2 md:top-16 left-1/2 -translate-x-1/2 -translate-y-1/2">
@@ -185,7 +161,19 @@ const Classic = ({ games, error }: ClassicProps) => {
           {gameEls}
         </div>
         {displayEndGame && (
-          <EndGame handleRestart={handleRestart} score={wins} average={average} highestScore={highestScore} isHighest={isHighest} id={id}></EndGame>
+          <div className="absolute top-0 left-0 inset-0 bg-zinc-800 bg-opacity-40 flex justify-center items-center z-40 animate-fade-in">
+            {scores.data && (
+              <EndGame
+                handleRestart={handleRestart}
+                score={wins}
+                scoreData={scores.data}
+                id={id}
+              ></EndGame>
+            )}
+            {scores.error && (
+              <>{scores.error.message}</>
+            )}
+          </div>
         )}
       </div>
     </BackgroundLayout>
@@ -197,13 +185,18 @@ export const getServerSideProps: GetServerSideProps = async () => {
     const games = await prisma.steamGame.findMany({
       where: {
         playerCount: {
-          gt: 0
-        }
-      }
+          gt: 0,
+        },
+      },
     });
     if (!games) throw new Error("no games found");
-    const gameArr = games.map(game => {
-      return {id: game.id, title: game.title, playerCount: game.playerCount, appId: game.appId}
+    const gameArr = games.map((game) => {
+      return {
+        id: game.id,
+        title: game.title,
+        playerCount: game.playerCount,
+        appId: game.appId,
+      };
     });
     return {
       props: {
@@ -215,7 +208,7 @@ export const getServerSideProps: GetServerSideProps = async () => {
     return {
       props: {
         games: null,
-        error: err,
+        error: "Something went wrong",
       },
     };
   }

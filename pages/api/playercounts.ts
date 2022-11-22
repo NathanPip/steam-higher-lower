@@ -1,6 +1,6 @@
-import { IncomingHttpHeaders } from "http";
-import { NextApiRequest, NextApiResponse } from "next";
-import { prisma } from "../../lib/prisma";
+import type { IncomingHttpHeaders } from "http";
+import type { NextApiRequest, NextApiResponse } from "next";
+import { prisma } from "../../server/db/client";
 
 type steamResponse = {
   response: {
@@ -42,7 +42,7 @@ export default async function handler(
       const count = (await (
         await fetch(
           `http://api.steampowered.com/ISteamUserStats/GetNumberOfCurrentPlayers/v0001/?appid=${
-            games[i - index.index - 1].appId
+            games[i - index.index - 1]?.appId
           }`
         )
       ).json()) as steamResponse;

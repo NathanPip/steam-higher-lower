@@ -1,9 +1,10 @@
+import { type NextPage } from "next";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import BackgroundLayout from "../components/BackgroundLayout";
 
 
-export default function Home() {
+const Home: NextPage = () => {
 
   const [fadeout, setFadeout] = useState(false);
   const [fadein, setFadein] = useState(true);
@@ -54,3 +55,5 @@ export default function Home() {
     </BackgroundLayout>
   );
 }
+
+export default Home;

@@ -1,4 +1,4 @@
-import type { GetServerSideProps } from "next";
+import type { GetServerSideProps, NextPage } from "next";
 import { prisma } from "../server/db/client";
 import BackgroundLayout from "../components/BackgroundLayout";
 import type { Highscore } from "@prisma/client";
@@ -9,7 +9,7 @@ type LeaderBoardProps = {
   error: any | null;
 };
 
-export default function LeaderBoard({ leaderBoard, error }: LeaderBoardProps) {
+const LeaderBoard: NextPage<LeaderBoardProps> = ({ leaderBoard, error }) => {
   console.log(error);
   return (
     <BackgroundLayout>
@@ -89,3 +89,5 @@ export const getServerSideProps: GetServerSideProps = async () => {
     };
   }
 };
+
+export default LeaderBoard;

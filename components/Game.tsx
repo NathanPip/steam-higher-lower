@@ -6,7 +6,7 @@ import styles from "../styles/game-style.module.scss";
 type GameProps = {
   game: GameObj | undefined;
   isStart?: boolean;
-  isHigher: React.Dispatch<React.SetStateAction<boolean>>;
+  isHigher: React.Dispatch<React.SetStateAction<boolean | undefined>>;
 };
 
 function steamImageLoader({ src }: { src: string }) {
