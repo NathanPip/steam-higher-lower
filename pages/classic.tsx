@@ -1,12 +1,12 @@
-import { GetServerSideProps } from "next";
-import { prisma } from "../lib/prisma";
+import type { GetServerSideProps } from "next";
+import { prisma } from "../server/db/client";
 import Link from "next/link";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import BackgroundLayout from "../components/BackgroundLayout";
 import EndGame from "../components/EndGame";
 import Game from "../components/Game";
-import { delay } from "../lib/helpers";
-import { GameObj } from "../lib/steamUtils";
+import { delay } from "../utils/helpers";
+import type { GameObj } from "../utils/steamUtils";
 import { v4 as uuid } from "uuid";
 
 
@@ -50,11 +50,12 @@ const Classic = ({ games, error }: ClassicProps) => {
 
   const getShuffledGames = useCallback(() => {
     if(!games) return;
-    let tempGames = [...games];
-    let newGames = [];
+    const tempGames = [...games];
+    const newGames: GameObj[] = [];
     while (tempGames.length) {
-      let rand = Math.floor(Math.random() * tempGames.length);
-      newGames.push(tempGames[rand]);
+      const rand = Math.floor(Math.random() * tempGames.length);
+      const randGame = tempGames[rand];
+      randGame && newGames.push(randGame);
       tempGames.splice(rand, 1);
     }
     return newGames;
@@ -144,8 +145,8 @@ const Classic = ({ games, error }: ClassicProps) => {
 
   useEffect(() => {
     if (isHigher === undefined || !playables) return;
-    const prev = playables[wins].playerCount || 0;
-    const current = playables[wins + 1].playerCount || 0;
+    const prev = playables[wins]?.playerCount || 0;
+    const current = playables[wins + 1]?.playerCount || 0;
     if (
       (isHigher && current > prev) ||
       (!isHigher && current < prev) ||
@@ -184,7 +185,7 @@ const Classic = ({ games, error }: ClassicProps) => {
           {gameEls}
         </div>
         {displayEndGame && (
-          <EndGame onClick={handleRestart} score={wins} average={average} highestScore={highestScore} isHighest={isHighest} id={id}></EndGame>
+          <EndGame handleRestart={handleRestart} score={wins} average={average} highestScore={highestScore} isHighest={isHighest} id={id}></EndGame>
         )}
       </div>
     </BackgroundLayout>
@@ -201,7 +202,7 @@ export const getServerSideProps: GetServerSideProps = async () => {
       }
     });
     if (!games) throw new Error("no games found");
-    let gameArr = games.map(game => {
+    const gameArr = games.map(game => {
       return {id: game.id, title: game.title, playerCount: game.playerCount, appId: game.appId}
     });
     return {

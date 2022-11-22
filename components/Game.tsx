@@ -1,13 +1,12 @@
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
-import { GameObj } from "../lib/steamUtils";
-import { PlayerCount } from "../pages/classic";
+import type { GameObj } from "../utils/steamUtils";
 import styles from "../styles/game-style.module.scss";
 
 type GameProps = {
   game: GameObj | undefined;
   isStart?: boolean;
-  isHigher: any;
+  isHigher: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 function steamImageLoader({ src }: { src: string }) {
@@ -16,13 +15,13 @@ function steamImageLoader({ src }: { src: string }) {
 
 const btnStyles = "py-3 px-5 text-4xl rounded-lg "
 
-export default function Game({
+const Game: React.FC<GameProps> = ({
   game,
   isStart,
   isHigher,
-}: GameProps) {
-  let [hasClicked, setHasClicked] = useState(isStart ? true : false);
-  let [hoverHigher, setHoverHigher] = useState<boolean>()
+}) => {
+  const [hasClicked, setHasClicked] = useState(isStart ? true : false);
+  const [hoverHigher, setHoverHigher] = useState<boolean>()
 
   const clickHandler = (higher: boolean) => {
     setHasClicked(true);
@@ -99,3 +98,4 @@ export default function Game({
     </div>
   );
 }
+export default Game;

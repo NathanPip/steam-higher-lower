@@ -1,10 +1,10 @@
 import Link from "next/link";
-import { FormEvent, useRef, useState } from "react";
-// @ts-ignore 
+import { useRef, useState } from "react";
+import type {FormEvent} from "react";
 import swearjar from "swearjar";
 
 type EndGameProps = {
-  onClick: any;
+  handleRestart: () => void;
   score: number;
   average: number | undefined;
   highestScore: number | undefined;
@@ -12,7 +12,7 @@ type EndGameProps = {
   id: string
 };
 
-export default function EndGame({ onClick, score, average, highestScore, isHighest, id }: EndGameProps) {
+const EndGame: React.FC<EndGameProps> = ({ handleRestart, score, average, highestScore, isHighest, id }) => {
   const [isRetry, setIsRetry] = useState(false);
   const [isEnd, setIsEnd] = useState(false);
   const [name, setName] = useState("");
@@ -36,7 +36,7 @@ export default function EndGame({ onClick, score, average, highestScore, isHighe
       });
     } else {
       setName("");
-      input.current!.placeholder = "Try again"
+      // input.current && input.current.placeholder = "Try again";
     }
   };
 
@@ -116,7 +116,7 @@ export default function EndGame({ onClick, score, average, highestScore, isHighe
             onMouseLeave={() => {
               setIsRetry(false);
             }}
-            onClick={onClick}
+            onClick={handleRestart}
             className="mb-4 w-3/4 py-2 text-center bg-opacity-50 bg-zinc-800 
             text-2xl rounded-lg transition-all duration-500
             shadow-retry hover:shadow-retryHover hover:shadow-blue-900 hover:-translate-y-1"
@@ -142,3 +142,5 @@ export default function EndGame({ onClick, score, average, highestScore, isHighe
     </div>
   );
 }
+
+export default EndGame;

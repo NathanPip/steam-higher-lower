@@ -9,9 +9,12 @@ export default function Home() {
   const [fadein, setFadein] = useState(true);
 
   useEffect(() => {
-    setTimeout(() => {
+    const timeout = setTimeout(() => {
       setFadein(false);
     }, 1)
+    return () => {
+      clearTimeout(timeout);
+    }
   }, [])
 
   return (

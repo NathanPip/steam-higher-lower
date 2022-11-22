@@ -1,7 +1,7 @@
-import { GetServerSideProps } from "next";
-import { prisma } from "../lib/prisma";
+import type { GetServerSideProps } from "next";
+import { prisma } from "../server/db/client";
 import BackgroundLayout from "../components/BackgroundLayout";
-import { Highscore } from "@prisma/client";
+import type { Highscore } from "@prisma/client";
 import Link from "next/link";
 
 type LeaderBoardProps = {
@@ -68,7 +68,7 @@ export default function LeaderBoard({ leaderBoard, error }: LeaderBoardProps) {
 
 export const getServerSideProps: GetServerSideProps = async () => {
   try {
-    let scores = await prisma.highscore.findMany();
+    const scores = await prisma.highscore.findMany();
     let scoreObjs = scores.map((scoreObj) => {
       const { name, score, attempts, beaten, matched } = scoreObj;
       return { name, score, attempts, beaten, matched };
