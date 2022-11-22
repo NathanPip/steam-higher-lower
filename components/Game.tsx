@@ -31,6 +31,7 @@ const Game: React.FC<GameProps> = ({
   useEffect(() => {
     if (!game || isStart) return;
     setHasClicked(false);
+    setHoverHigher(undefined);
   }, [game, isStart])
 
   if (!game)
