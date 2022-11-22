@@ -144,8 +144,8 @@ const Classic: NextPage<ClassicProps> = ({ games, error }) => {
         >
           Quit
         </Link>
-        <div className="absolute h-16 w-16 rounded-full bg-white text-black flex justify-center items-center text-4xl top-1/2 md:top-16 left-1/2 -translate-x-1/2 -translate-y-1/2">
-          {wins}
+        <div className="absolute h-24 w-24 rounded-full bg-[#171A21] flex justify-center items-center text-6xl top-1/2 md:top-16 left-1/2 -translate-x-1/2 -translate-y-1/2">
+          <p className="bg-gradient-to-br from-blue-700 to-rose-700 bg-clip-text text-transparent">{wins}</p>
         </div>
         <div
           ref={gameContainer}
