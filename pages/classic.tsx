@@ -12,7 +12,7 @@ import { trpc } from "../utils/trpc";
 
 type ClassicProps = {
   games: Array<GameObj> | null;
-  error: any;
+  error: string | null;
 };
 
 export type PlayerCount = {

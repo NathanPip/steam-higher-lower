@@ -28,16 +28,22 @@ export default async function handler(
       },
     });
     if (!index) throw new Error("no data found");
-    const games = await prisma.steamGame.findMany({
+
+    let games = await prisma.steamGame.findMany({
       where: {
-        id: {
-          gt: index.index,
-          lt: index.index + gameAmt + 1,
+        playerCount: 0
+      }
+    })
+    if(!games.length){
+      games = await prisma.steamGame.findMany({
+        where: {
+          id: {
+            gt: index.index,
+            lt: index.index + gameAmt + 1,
+          },
         },
-      },
-    });
-    console.log(games);
-    if (!games) throw new Error("no games found");
+      });
+    }
     for (let i = index.index + 1; i <= games.length + index.index; i++) {
       const count = (await (
         await fetch(

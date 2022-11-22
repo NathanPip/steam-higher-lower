@@ -6,7 +6,7 @@ import Link from "next/link";
 
 type LeaderBoardProps = {
   leaderBoard: Highscore[];
-  error: any | null;
+  error: string | null;
 };
 
 const LeaderBoard: NextPage<LeaderBoardProps> = ({ leaderBoard, error }) => {
@@ -84,7 +84,7 @@ export const getServerSideProps: GetServerSideProps = async () => {
     return {
       props: {
         leaderBoard: null,
-        error: err,
+        error: "Something went wrong",
       },
     };
   }

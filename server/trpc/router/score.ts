@@ -1,5 +1,4 @@
 import type { Highscore } from "@prisma/client";
-import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
 import { router, publicProcedure } from "../trpc";
