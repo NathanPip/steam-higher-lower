@@ -12,14 +12,17 @@ const BackgroundLayout: FC<Props> = ({children}) => {
     useEffect(() => {
         if(!bg.current) return;
         bg.current.style.opacity = ".5";
-        window.addEventListener("mousemove", (e) => {
+        const handler = (e:MouseEvent) => {
             if(!bg.current) return;
             let amt = (window.innerHeight - (e.clientY + 300) * .5) / window.innerHeight;
             if(amt > 1 || amt < 0) {
                 amt = Math.round(amt);
             }
             bg.current.style.opacity = amt.toString();
-        })
+        }
+        window.addEventListener("mousemove", handler)
+
+        return () => {window.removeEventListener("mousemove", handler);}
     }, [])
 
     return (

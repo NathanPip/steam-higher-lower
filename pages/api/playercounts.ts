@@ -1,6 +1,6 @@
-import { IncomingHttpHeaders } from "http";
-import { NextApiRequest, NextApiResponse } from "next";
-import { prisma } from "../../lib/prisma";
+import type { IncomingHttpHeaders } from "http";
+import type { NextApiRequest, NextApiResponse } from "next";
+import { prisma } from "../../server/db/client";
 
 type steamResponse = {
   response: {
@@ -28,21 +28,27 @@ export default async function handler(
       },
     });
     if (!index) throw new Error("no data found");
-    const games = await prisma.steamGame.findMany({
+
+    let games = await prisma.steamGame.findMany({
       where: {
-        id: {
-          gt: index.index,
-          lt: index.index + gameAmt + 1,
+        playerCount: 0
+      }
+    })
+    if(!games.length){
+      games = await prisma.steamGame.findMany({
+        where: {
+          id: {
+            gt: index.index,
+            lt: index.index + gameAmt + 1,
+          },
         },
-      },
-    });
-    console.log(games);
-    if (!games) throw new Error("no games found");
+      });
+    }
     for (let i = index.index + 1; i <= games.length + index.index; i++) {
       const count = (await (
         await fetch(
           `http://api.steampowered.com/ISteamUserStats/GetNumberOfCurrentPlayers/v0001/?appid=${
-            games[i - index.index - 1].appId
+            games[i - index.index - 1]?.appId
           }`
         )
       ).json()) as steamResponse;

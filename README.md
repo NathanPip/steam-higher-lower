@@ -1,34 +1,5 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Steam Higher Lower
+A simple remake of the classic Higher Lower Game using Steam game player counts instead of Google search counts
 
-## Getting Started
-
-First, run the development server:
-
-```bash
-npm run dev
-# or
-yarn dev
-```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
-
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
-
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+## Why
+I wanted to test out NextJS for it's server side rendering capabilities as well as it's ability to simplify backend development through it's built in api directory and the fact that all the code runs on the server. I also had never built a web scraper before and thought this would be a fun little idea. The webscraper scrapes the top 6 pages of the steam store and parses the appId, title, and release date from every game and stores the games that are currently released in my database. The appIds are then used to make a request up to the Steam API for player count data which is then pushed into every game row. This was also my first time running with TailwindCSS which was an awesome experience that is definitely going to be a part of my projects moving forward. It provided a very intuitive way to write CSS without writing CSS and the built in utility classes basically make it CSS with guardrails.

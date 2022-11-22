@@ -17,8 +17,8 @@ export const scrapeTopGames = async (pageNum = 1, gameObjs: GameObj[] = []): Pro
         const appId = $(el).attr('data-ds-appid') || "";
         const release = $(el).find('.search_released').text().trim();
         const now = new Date();
-        let date = new Date(release);
-        if(now.getTime() > date.getTime())
+        const date = new Date(release);
+        if(now.getTime() > date.getTime() && !appId.includes(","))
             gameObjs.push({title, appId});
     })   
     return gameObjs;

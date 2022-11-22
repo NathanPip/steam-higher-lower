@@ -1,7 +1,7 @@
-import { NextApiRequest, NextApiResponse } from "next";
-import { prisma } from "../../lib/prisma";
-import { scrapeTopGames } from "../../lib/steamUtils";
-import { Headers } from "./playercounts";
+import type { NextApiRequest, NextApiResponse } from "next";
+import { prisma } from "../../server/db/client";
+import { scrapeTopGames } from "../../utils/steamUtils";
+import type { Headers } from "./playercounts";
 
 export default async function handler(
   req: NextApiRequest,
@@ -13,25 +13,25 @@ export default async function handler(
     if (auth !== process.env.API_SECRET_KEY) throw new Error("Not Authorized");
     
     const pageCount = 6;
-    let index = await prisma.index.findUnique({
+    const index = await prisma.index.findUnique({
       where: {
         name: "Games",
       },
     });
     if (!index || index?.index === null) throw new Error("no data found");
-    let games = await scrapeTopGames(index?.index || 1);
+    const games = await scrapeTopGames(index?.index || 1);
     for (let i = index.lastCount; i < games.length + index.lastCount; i++) {
       await prisma.steamGame.upsert({
         where: {
           id: i + 1,
         },
         update: {
-          title: games[i - index.lastCount].title,
-          appId: games[i - index.lastCount].appId,
+          title: games[i - index.lastCount]?.title,
+          appId: games[i - index.lastCount]?.appId,
         },
         create: {
-          title: games[i - index.lastCount].title,
-          appId: games[i - index.lastCount].appId,
+          title: games[i - index.lastCount]?.title,
+          appId: games[i - index.lastCount]?.appId,
         },
       });
     }
