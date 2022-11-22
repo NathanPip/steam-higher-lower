@@ -1,7 +1,8 @@
 import Link from "next/link";
 import { useRef, useState } from "react";
 import type {FormEvent} from "react";
-import swearjar from "swearjar";
+import profanity from "../utils/profanity";
+import { trpc } from "../utils/trpc";
 
 type EndGameProps = {
   handleRestart: () => void;
@@ -16,29 +17,17 @@ const EndGame: React.FC<EndGameProps> = ({ handleRestart, score, average, highes
   const [isRetry, setIsRetry] = useState(false);
   const [isEnd, setIsEnd] = useState(false);
   const [name, setName] = useState("");
-  const [submitMessage, setSubmitMessage] = useState<string>();
   const input = useRef<HTMLInputElement>(null);
+  const highscoreMutation = trpc.highscore.newHighscore.useMutation();
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     if (!isHighest || !name) return;
-    const isProfane: boolean = swearjar.profane(name);
+    const isProfane: boolean = profanity.exists(name);
     if(!isProfane){
-    fetch("/api/highscore", {
-      method: "POST",
-      body: JSON.stringify({ name, id }),
-    })
-      .then(() => {
-        setSubmitMessage("You're in the books");
-      })
-      .catch(() => {
-        setSubmitMessage("Something went wrong");
-      });
-    } else {
-      setName("");
-      // input.current && input.current.placeholder = "Try again";
+      highscoreMutation.mutate({name: name, id: id});
     }
-  };
+}
 
   return (
     <div className="absolute top-0 left-0 inset-0 bg-zinc-800 bg-opacity-40 flex justify-center items-center z-40 animate-fade-in">
@@ -78,9 +67,10 @@ const EndGame: React.FC<EndGameProps> = ({ handleRestart, score, average, highes
         {isHighest ? (
           <>
             <p className="bg-gradient-to-br from-blue-700 to-rose-700 bg-clip-text text-transparent z-20 text-4xl text-center">
-              {submitMessage ? submitMessage : "The New World Record!"}
+              {highscoreMutation.data && !highscoreMutation.error ? highscoreMutation.data : "The New World Record!"}
+              {highscoreMutation.error && "Looks like something went wrong"}
             </p>
-            {!submitMessage ? (
+            {!highscoreMutation.data ? (
               <form
                 className="text-xl flex flex-col items-center z-20 w-3/4"
                 onSubmit={handleSubmit}
