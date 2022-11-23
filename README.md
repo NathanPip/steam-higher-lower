@@ -1,5 +1,2 @@
 # Steam Higher Lower
 A simple remake of the classic Higher Lower Game using Steam game player counts instead of Google search counts
-
-## Why
-I wanted to test out NextJS for it's server side rendering capabilities as well as it's ability to simplify backend development through it's built in api directory and the fact that all the code runs on the server. I also had never built a web scraper before and thought this would be a fun little idea. The webscraper scrapes the top 6 pages of the steam store and parses the appId, title, and release date from every game and stores the games that are currently released in my database. The appIds are then used to make a request up to the Steam API for player count data which is then pushed into every game row. This was also my first time running with TailwindCSS which was an awesome experience that is definitely going to be a part of my projects moving forward. It provided a very intuitive way to write CSS without writing CSS and the built in utility classes basically make it CSS with guardrails.
