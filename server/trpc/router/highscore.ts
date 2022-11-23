@@ -4,19 +4,18 @@ import { router, publicProcedure } from "../trpc";
 
 export const highscoreRouter = router({
   newHighscore: publicProcedure
-    .input(
-      z
-        .object({ name: z.string().nullish(), id: z.string() })
-    )
-    .mutation(({ ctx, input }) => {
-      ctx.prisma.highscore.update({
+    .input(z.object({ name: z.string(), id: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      console.log(input.id);
+      console.log(input.name);
+      await ctx.prisma.highscore.update({
         where: {
           id: input.id,
         },
         data: {
-          name: input?.name || "unknown",
+          name: input.name,
         },
       });
-      return "You're in the books"
+      return "You're in the books";
     }),
 });
