@@ -3,8 +3,8 @@ import cheerio from "cheerio";
 export type GameObj = {
     title: string;
     appId: string;
+    playerCount: number | string;
     hasPlayed?: boolean;
-    playerCount?: number;
 }
 
 export const scrapeTopGames = async (pageNum = 1, gameObjs: GameObj[] = []): Promise<GameObj[]> => {
@@ -19,7 +19,7 @@ export const scrapeTopGames = async (pageNum = 1, gameObjs: GameObj[] = []): Pro
         const now = new Date();
         const date = new Date(release);
         if(now.getTime() > date.getTime() && !appId.includes(","))
-            gameObjs.push({title, appId});
+            gameObjs.push({title, appId, playerCount: 0});
     })   
     return gameObjs;
 }

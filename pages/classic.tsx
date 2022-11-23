@@ -9,6 +9,7 @@ import { delay } from "../utils/helpers";
 import type { GameObj } from "../utils/steamUtils";
 import { v4 as uuid } from "uuid";
 import { trpc } from "../utils/trpc";
+import { decrypt, encrypt } from "../utils/crypto";
 
 type ClassicProps = {
   games: Array<GameObj> | null;
@@ -54,7 +55,11 @@ const Classic: NextPage<ClassicProps> = ({ games, error }) => {
     while (tempGames.length) {
       const rand = Math.floor(Math.random() * tempGames.length);
       const randGame = tempGames[rand];
-      randGame && newGames.push(randGame);
+      if(randGame) {
+        if(typeof randGame.playerCount === 'string')
+          randGame.playerCount = decrypt(randGame.playerCount as string) as number;
+        newGames.push(randGame);
+      }
       tempGames.splice(rand, 1);
     }
     return newGames;
@@ -194,7 +199,7 @@ export const getServerSideProps: GetServerSideProps = async () => {
       return {
         id: game.id,
         title: game.title,
-        playerCount: game.playerCount,
+        playerCount: encrypt(game.playerCount),
         appId: game.appId,
       };
     });
