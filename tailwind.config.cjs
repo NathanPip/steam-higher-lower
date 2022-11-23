@@ -36,6 +36,7 @@ module.exports = {
       animation: {
         'slide-left': 'slide 1s forwards',
         'fade-in': 'fade .5s forwards',
+        'fade-in-slow': 'fade 1.5s forwards .5s',
         'fade-out': 'fade 2s reverse'
       },
       fontFamily: {
