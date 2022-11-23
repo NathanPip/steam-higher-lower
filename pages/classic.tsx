@@ -10,6 +10,7 @@ import type { GameObj } from "../utils/steamUtils";
 import { v4 as uuid } from "uuid";
 import { trpc } from "../utils/trpc";
 import { decrypt, encrypt } from "../utils/crypto";
+import Image from "next/image";
 
 type ClassicProps = {
   games: Array<GameObj> | null;
@@ -163,10 +164,13 @@ const Classic: NextPage<ClassicProps> = ({ games, error }) => {
             }`,
           }}
         >
-          {gameEls}
+          {gameEls ? gameEls : <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-3/4 text-center text-3xl animate-fade-in-slow">
+            <Image src="/images/loading_spinner.svg" width={200} height={200} alt="loading spinner"/>
+            <p>Loading</p>
+        </div>}
         </div>
         {displayEndGame && (
-          <div className="absolute top-0 left-0 inset-0 bg-zinc-800 bg-opacity-40 flex justify-center items-center z-40 animate-fade-in">
+          <div className="absolute top-0 left-0 inset-0 bg-zinc-800 bg-opacity-40 flex justify-center items-center z-40">
             {scores.data && (
               <EndGame
                 handleRestart={handleRestart}
