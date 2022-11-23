@@ -83,7 +83,7 @@ export const scoreRouter = router({
       let highestScore: Highscore[] | number =
         await ctx.prisma.highscore.findMany({
           orderBy: {
-            score: "asc",
+            score: "desc",
           },
           take: 1,
         });
